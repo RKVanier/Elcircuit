@@ -1,0 +1,26 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package elcicruit;
+
+/**
+ *
+ * @author Rayan
+ */
+public class Circuit {
+    Battery equivalentBattery;
+    Battery[] batterys;
+    Resistor equivalentResistor;
+    Resistor[] resistors;
+    Capacitor equivalentCapacitor;
+    Capacitor[] capacitors;
+
+    
+    public Circuit() {
+    }
+
+    
+    
+    
+}

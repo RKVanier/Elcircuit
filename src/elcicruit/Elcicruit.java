@@ -4,11 +4,13 @@
  */
 package elcicruit;
 
+import javafx.application.Application;
+
 /**
  *
  * @author Rayan
  */
-public class Elcicruit {
+public class Elcicruit extends Application{
 
     /**
      * @param args the command line arguments
