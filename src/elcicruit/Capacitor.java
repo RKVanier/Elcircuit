@@ -10,7 +10,8 @@ import java.util.Objects;
  *
  * @author Rayan
  */
-public class Capacitor extends Component{
+public class Capacitor extends Component {
+
     Double capacitance;
     Double charge;
 
@@ -26,21 +27,22 @@ public class Capacitor extends Component{
         this.charge = charge;
     }
 
-    @Override
     public void calculateVoltage() {
         this.voltage = this.charge / this.capacitance;
     }
-    
-    public static void calculateCharging(Double time){
-     
-        //this.voltage = (1 - Math.exp(-time / ()));
-        
+
+    public void calculateCharging(double time, double equivalentResistance, double maxVoltage) {
+        double tau = equivalentResistance * this.capacitance;
+        this.voltage = maxVoltage * (1 - Math.exp(-time / tau));
+        this.charge = this.capacitance * this.voltage;
     }
-    
-    public static void calculateDischarging(Double time){
-        
+
+    public void calculateDischarging(double time, double equivalentResistance, double maxVoltage) {
+        double tau = equivalentResistance * this.capacitance;
+        this.voltage = maxVoltage * Math.exp(-time / tau);
+        this.charge = this.capacitance * this.voltage;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -86,6 +88,5 @@ public class Capacitor extends Component{
 
     public void setCharge(Double charge) {
         this.charge = charge;
-    }   
-    
+    }
 }

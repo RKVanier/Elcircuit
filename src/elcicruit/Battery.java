@@ -12,23 +12,19 @@ import java.util.Objects;
  */
 public class Battery {
     Double emf;
-    Double current;
 
     public Battery() {
         this.emf = null;
-        this.current = null;
     }
 
-    public Battery(Double emf, Double current) {
+    public Battery(Double emf) {
         this.emf = emf;
-        this.current = current;
     }
 
     @Override
     public int hashCode() {
         int hash = 3;
         hash = 67 * hash + Objects.hashCode(this.emf);
-        hash = 67 * hash + Objects.hashCode(this.current);
         return hash;
     }
 
@@ -44,15 +40,14 @@ public class Battery {
             return false;
         }
         final Battery other = (Battery) obj;
-        if (!Objects.equals(this.emf, other.emf)) {
-            return false;
-        }
-        return Objects.equals(this.current, other.current);
+        return Objects.equals(this.emf, other.emf);
     }
+
+   
 
     @Override
     public String toString() {
-        return "Battery{" + "emf=" + emf + ", current=" + current + '}';
+        return "Battery{" + "emf=" + emf + '}';
     }
 
     public Double getEmf() {
@@ -62,13 +57,4 @@ public class Battery {
     public void setEmf(Double emf) {
         this.emf = emf;
     }
-
-    public Double getCurrent() {
-        return current;
-    }
-
-    public void setCurrent(Double current) {
-        this.current = current;
-    }
-    
 }

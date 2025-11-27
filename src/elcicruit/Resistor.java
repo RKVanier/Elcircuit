@@ -12,30 +12,25 @@ import java.util.Objects;
  */
 public class Resistor extends Component{
     Double resistance;
-    Double current;
 
     public Resistor() {
         super();
         this.resistance = null;
-        this.current = null;
     }
 
     public Resistor(double resistance, double current, double voltage) {
         super(voltage);
         this.resistance = resistance;
-        this.current = current;
     }
 
-    @Override
-    public void calculateVoltage() {
-        this.voltage = this.current * this.resistance;
+    public void calculateVoltage(double current) {
+        this.voltage = current * this.resistance;
     }
 
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 97 * hash + Objects.hashCode(this.resistance);
-        hash = 97 * hash + Objects.hashCode(this.current);
         return hash;
     }
 
@@ -51,15 +46,14 @@ public class Resistor extends Component{
             return false;
         }
         final Resistor other = (Resistor) obj;
-        if (!Objects.equals(this.resistance, other.resistance)) {
-            return false;
-        }
-        return Objects.equals(this.current, other.current);
+        return Objects.equals(this.resistance, other.resistance);
     }
+
+    
 
     @Override
     public String toString() {
-        return "Resistor{" + "resistance=" + resistance + ", current=" + current + '}';
+        return "Resistor{" + "resistance=" + resistance + '}';
     }
 
     public Double getResistance() {
@@ -70,13 +64,5 @@ public class Resistor extends Component{
         this.resistance = resistance;
     }
 
-    public Double getCurrent() {
-        return current;
-    }
 
-    public void setCurrent(Double current) {
-        this.current = current;
-    }
-    
-    
 }

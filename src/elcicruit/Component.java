@@ -18,10 +18,6 @@ public class Component {
     public Component(double voltage) {
         this.voltage = voltage;
     }
-
-    public void calculateVoltage() {
-        
-    }
     
     @Override
     public int hashCode() {

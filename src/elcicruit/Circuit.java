@@ -13,15 +13,16 @@ import java.util.Objects;
  * @author Rayan
  */
 public class Circuit {
-
-    Battery equivalentBattery;
+    static Double current;
+    static Battery equivalentBattery;
     List<Battery> batterys;
-    Resistor equivalentResistor;
+    static Resistor equivalentResistor;
     List<Resistor> resistors;
-    Capacitor equivalentCapacitor;
+    static Capacitor equivalentCapacitor;
     List<Capacitor> capacitors;
 
     public Circuit() {
+        this.current = null;
         this.equivalentBattery = null;
         this.batterys = new ArrayList<>();
         this.equivalentResistor = null;
@@ -30,7 +31,8 @@ public class Circuit {
         this.capacitors = new ArrayList<>();
     }
 
-    public Circuit(Battery equivalentBattery, List<Battery> batterys, Resistor equivalentResistor, List<Resistor> resistors, Capacitor equivalentCapacitor, List<Capacitor> capacitors) {
+    public Circuit(Double current, Battery equivalentBattery, List<Battery> batterys, Resistor equivalentResistor, List<Resistor> resistors, Capacitor equivalentCapacitor, List<Capacitor> capacitors) {
+        this.current = current;
         this.equivalentBattery = equivalentBattery;
         this.batterys = batterys;
         this.equivalentResistor = equivalentResistor;
@@ -61,6 +63,11 @@ public class Circuit {
             emf += bat.getEmf();
         }
         equivalentResistor.setResistance(emf);
+    }
+    
+    public void calculateCurrent() {
+        
+        
     }
     
     @Override
