@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="elcicruit.CircuitController">
+   <top>
+      <VBox alignment="CENTER" spacing="10.0" styleClass="header-section" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+         </padding>
+         <children>
+            <Label styleClass="title-label" text="Electric Circuit Calculator">
+               <font>
+                  <Font name="System Bold" size="22.0" />
+               </font>
+            </Label>
+            <Label text="Add components to your circuit and calculate equivalent values">
+               <font>
+                  <Font size="12.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </top>
+   
+   <center>
+      <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER" style="-fx-background-color: transparent;">
+         <content>
+            <VBox spacing="15.0">
+               <padding>
+                  <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+               </padding>
+               <children>
+                  <!-- Battery Section -->
+                  <VBox spacing="8.0" styleClass="component-section">
+                     <children>
+                        <Label styleClass="section-label" text="Batteries">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label minWidth="80.0" text="EMF (V):" />
+                              <TextField fx:id="batteryEmfField" prefWidth="150.0" promptText="Enter EMF" />
+                              <Button fx:id="addBatteryButton" mnemonicParsing="false" onAction="#handleAddBattery" text="Add Battery" />
+                              <Button mnemonicParsing="false" onAction="#handleRemoveBattery" text="Remove Selected" />
+                           </children>
+                        </HBox>
+                        <TableView fx:id="batteryTable" prefHeight="100.0">
+                           <columns>
+                              <TableColumn fx:id="batteryEmfColumn" prefWidth="150.0" text="EMF (V)">
+                                 <cellValueFactory>
+                                    <PropertyValueFactory property="emf" />
+                                 </cellValueFactory>
+                              </TableColumn>
+                           </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+                  
+                  <!-- Resistor Section -->
+                  <VBox spacing="8.0" styleClass="component-section">
+                     <children>
+                        <Label styleClass="section-label" text="Resistors">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label minWidth="80.0" text="Resistance (Ω):" />
+                              <TextField fx:id="resistorResistanceField" prefWidth="150.0" promptText="Enter Resistance" />
+                              <Button fx:id="addResistorButton" mnemonicParsing="false" onAction="#handleAddResistor" text="Add Resistor" />
+                              <Button mnemonicParsing="false" onAction="#handleRemoveResistor" text="Remove Selected" />
+                           </children>
+                        </HBox>
+                        <TableView fx:id="resistorTable" prefHeight="100.0">
+                          <columns>
+                            <TableColumn fx:id="resistorResistanceColumn" prefWidth="150.0" text="Resistance (Ω)">
+                               <cellValueFactory>
+                                  <PropertyValueFactory property="resistance" />
+                               </cellValueFactory>
+                            </TableColumn>
+                          </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+                  
+                  <!-- Capacitor Section -->
+                  <VBox spacing="8.0" styleClass="component-section">
+                     <children>
+                        <Label styleClass="section-label" text="Capacitors">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label minWidth="110.0" text="Capacitance (F):" />
+                              <TextField fx:id="capacitorCapacitanceField" prefWidth="120.0" promptText="Enter Capacitance" />
+                              <Label minWidth="80.0" text="Charge (C):" />
+                              <TextField fx:id="capacitorChargeField" prefWidth="120.0" promptText="Enter Charge" />
+                              <Button fx:id="addCapacitorButton" mnemonicParsing="false" onAction="#handleAddCapacitor" text="Add Capacitor" />
+                              <Button mnemonicParsing="false" onAction="#handleRemoveCapacitor" text="Remove Selected" />
+                           </children>
+                        </HBox>
+                        <TableView fx:id="capacitorTable" prefHeight="100.0">
+                          <columns>
+                            <TableColumn fx:id="capacitorCapacitanceColumn" prefWidth="150.0" text="Capacitance (F)">
+                               <cellValueFactory>
+                                  <PropertyValueFactory property="capacitance" />
+                               </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn fx:id="capacitorChargeColumn" prefWidth="150.0" text="Charge (C)">
+                               <cellValueFactory>
+                                  <PropertyValueFactory property="charge" />
+                               </cellValueFactory>
+                            </TableColumn>
+                          </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+                  
+                  <!-- Action Buttons and Results Section -->
+                  <VBox spacing="12.0" styleClass="results-section">
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                     <children>
+                        <!-- Action Buttons -->
+                        <HBox alignment="CENTER" spacing="12.0">
+                           <children>
+                              <Button fx:id="calculateButton" mnemonicParsing="false" onAction="#handleCalculate" prefHeight="35.0" prefWidth="150.0" styleClass="calculate-button" text="Calculate Circuit">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Button>
+                              <!-- View Diagram Button (disabled initially) -->
+                              <Button fx:id="viewDiagramButton" mnemonicParsing="false" onAction="#handleViewDiagram" prefHeight="35.0" prefWidth="200.0" style="-fx-background-color: #27ae60; -fx-text-fill: white;" text="📊 View Diagram" disable="true">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="clearAllButton" mnemonicParsing="false" onAction="#handleClearAll" prefHeight="35.0" prefWidth="120.0" text="Clear All">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </HBox>
+                        
+                        <!-- Results Display -->
+                        <Separator prefWidth="200.0" />
+                        
+                        <Label styleClass="section-label" text="Results">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        
+                        <GridPane hgap="20.0" vgap="8.0">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="RIGHT" minWidth="180.0" />
+                            <ColumnConstraints halignment="LEFT" minWidth="150.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Equivalent EMF:" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="equivalentEmfLabel" styleClass="result-value" text="--" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </Label>
+                              
+                              <Label text="Equivalent Resistance:" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="equivalentResistanceLabel" styleClass="result-value" text="--" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </Label>
+                              
+                              <Label text="Equivalent Capacitance:" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="equivalentCapacitanceLabel" styleClass="result-value" text="--" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </Label>
+                              
+                              <Label text="Circuit Current:" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="currentLabel" styleClass="result-value" text="--" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </center>
+</BorderPane>

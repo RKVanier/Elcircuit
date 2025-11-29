@@ -1,0 +1,257 @@
+/* Root styles */
+.root {
+    -fx-background-color: #f5f5f5;
+}
+
+/* Welcome Screen Styles */
+.welcome-pane {
+    -fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);
+}
+
+.welcome-pane .label {
+    -fx-text-fill: white;
+}
+
+.logo-icon {
+    -fx-text-fill: #ffd700;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 3);
+}
+
+.welcome-title {
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 2);
+}
+
+.version-label {
+    -fx-text-fill: rgba(255,255,255,0.8);
+}
+
+.description-text {
+    -fx-text-fill: white;
+    -fx-font-weight: normal;
+}
+
+.feature-text {
+    -fx-text-fill: rgba(255,255,255,0.9);
+}
+
+.footer-text {
+    -fx-text-fill: rgba(255,255,255,0.7);
+}
+
+.start-button {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);
+}
+
+.start-button:hover {
+    -fx-background-color: #229954;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.exit-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-border-color: white;
+    -fx-border-width: 2;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+}
+
+.exit-button:hover {
+    -fx-background-color: rgba(255,255,255,0.1);
+}
+
+/* Welcome Screen Options */
+.option-box {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 3);
+}
+
+.option-box .label {
+    -fx-text-fill: #2c3e50;
+}
+
+.option-icon {
+    -fx-text-fill: #3498db;
+}
+
+.option-title {
+    -fx-text-fill: #2c3e50;
+}
+
+.option-description {
+    -fx-text-fill: #7f8c8d;
+}
+
+.option-feature {
+    -fx-text-fill: #34495e;
+}
+
+/* Circuit Builder Styles */
+.toolbar {
+    -fx-background-color: #ecf0f1;
+    -fx-background-radius: 5;
+}
+
+.tool-button {
+    -fx-background-color: #bdc3c7;
+    -fx-text-fill: #2c3e50;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.tool-button:hover {
+    -fx-background-color: #95a5a6;
+}
+
+.delete-button-tool {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.delete-button-tool:hover {
+    -fx-background-color: #c0392b;
+}
+
+.clear-button-tool {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: white;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.clear-button-tool:hover {
+    -fx-background-color: #7f8c8d;
+}
+
+.status-bar {
+    -fx-background-color: #34495e;
+}
+
+.status-bar .label {
+    -fx-text-fill: white;
+}
+
+.status-text {
+    -fx-text-fill: #3498db;
+    -fx-font-style: italic;
+}
+
+.canvas-container {
+    -fx-background-color: white;
+    -fx-padding: 10;
+}
+
+.circuit-canvas {
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+}
+
+.bottom-section {
+    -fx-background-color: #ecf0f1;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 2 0 0 0;
+}
+
+.result-label {
+    -fx-text-fill: #2c3e50;
+}
+
+.instruction-title {
+    -fx-text-fill: #2c3e50;
+}
+
+.instruction-text {
+    -fx-text-fill: #7f8c8d;
+}
+
+/* Header section */
+.header-section {
+    -fx-background-color: linear-gradient(to bottom, #2c3e50, #34495e);
+}
+
+.header-section .label {
+    -fx-text-fill: white;
+}
+
+/* Component sections */
+.component-section {
+    -fx-background-color: white;
+    -fx-padding: 15;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.section-label {
+    -fx-text-fill: #2c3e50;
+}
+
+/* Results section */
+.results-section {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1 0 0 0;
+}
+
+.result-value {
+    -fx-text-fill: #27ae60;
+    -fx-font-weight: bold;
+}
+
+/* Buttons */
+.button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.calculate-button {
+    -fx-background-color: #27ae60;
+}
+
+.calculate-button:hover {
+    -fx-background-color: #229954;
+}
+
+/* Text fields */
+.text-field {
+    -fx-background-radius: 4;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 4;
+}
+
+.text-field:focused {
+    -fx-border-color: #3498db;
+    -fx-border-width: 2;
+}
+
+/* Tables */
+.table-view {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: #ecf0f1;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
