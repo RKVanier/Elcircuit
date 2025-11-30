@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="585" prefWidth="980" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="elcircuit.MainViewController">
+
+    <left>
+        <VBox prefWidth="220" spacing="10" styleClass="info-panel">
+            <Label styleClass="info-title" text="Information" />
+            <Separator />
+
+            <Label styleClass="info-label" text="Voltage:" />
+            <TextField fx:id="voltageField" editable="false" styleClass="info-field" />
+
+            <Label styleClass="info-label" text="Current:" />
+            <TextField fx:id="currentField" editable="false" styleClass="info-field" />
+
+            <Label styleClass="info-label" text="Special:" />
+            <Label styleClass="info-small" text="Value (capacitance /" />
+            <Label styleClass="info-small" text="resistance)" />
+            <TextField fx:id="specialField" editable="false" styleClass="info-field" />
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="circuitStack" styleClass="circuit-frame">
+            <ImageView fx:id="gridBackground" fitHeight="560.0" fitWidth="750.0" pickOnBounds="true">
+                <image>
+                    <Image url="@vector-black-grid-line-background_29977-18.png" />
+                </image>
+            </ImageView>
+
+            <Pane fx:id="wireLayer" pickOnBounds="false" />
+            <Pane fx:id="componentLayer" />
+        </StackPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="766.0" spacing="150.0" BorderPane.alignment="CENTER">
+            <children>
+                <ImageView fx:id="batteryIcon" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@Capture%20d’écran%202025-11-30%20021900.png" />
+                    </image>
+                </ImageView>
+                <ImageView fx:id="resistorIcon" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@Capture%20d’écran%202025-11-30%20022007.png" />
+                    </image>
+                </ImageView>
+                <ImageView fx:id="capacitorIcon" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@Capture%20d’écran%202025-11-30%20022034.png" />
+                    </image>
+                </ImageView>
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>

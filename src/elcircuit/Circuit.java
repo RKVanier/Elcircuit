@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package elcicruit;
+package elcircuit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +14,11 @@ import java.util.Objects;
  */
 public class Circuit {
     static Double current;
-    static Battery equivalentBattery;
+    Battery equivalentBattery;
     List<Battery> batterys;
-    static Resistor equivalentResistor;
+    Resistor equivalentResistor;
     List<Resistor> resistors;
-    static Capacitor equivalentCapacitor;
+    Capacitor equivalentCapacitor;
     List<Capacitor> capacitors;
 
     public Circuit() {
@@ -66,8 +66,7 @@ public class Circuit {
     }
     
     public void calculateCurrent() {
-        
-        
+        this.current =  equivalentBattery.getEmf() / equivalentResistor.getResistance();
     }
     
     @Override
