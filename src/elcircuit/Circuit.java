@@ -13,6 +13,7 @@ import java.util.Objects;
  * @author Rayan
  */
 public class Circuit {
+
     static Double current;
     Battery equivalentBattery;
     List<Battery> batterys;
@@ -42,33 +43,91 @@ public class Circuit {
     }
 
     public void calculateCapacitor() {
-        double capacitance = 0;
-        for (Capacitor cap : capacitors) {
-            capacitance += (1 / cap.getCapacitance());
+        if (capacitors.isEmpty()) {
+            equivalentCapacitor = null;
+            return;
         }
-        equivalentCapacitor.setCapacitance(1 / capacitance);
+
+        double invCsum = 0.0;
+        for (Capacitor cap : capacitors) {
+            if (cap.getCapacitance() != null && cap.getCapacitance() != 0.0) {
+                invCsum += 1.0 / cap.getCapacitance();
+            }
+        }
+
+        if (invCsum == 0.0) {
+            equivalentCapacitor = null;
+            return;
+        }
+
+        if (equivalentCapacitor == null) {
+            equivalentCapacitor = new Capacitor();
+        }
+        equivalentCapacitor.setCapacitance(1.0 / invCsum);
     }
-    
+
     public void calculateResistor() {
-        double resistance = 0;
+        if (resistors.isEmpty()) {
+            equivalentResistor = null;
+            return;
+        }
+
+        double resistance = 0.0;
         for (Resistor res : resistors) {
-            resistance += res.getResistance();
+            if (res.getResistance() != null) {
+                resistance += res.getResistance();
+            }
+        }
+
+        if (equivalentResistor == null) {
+            equivalentResistor = new Resistor();
         }
         equivalentResistor.setResistance(resistance);
     }
-    
+
     public void calculateBattery() {
-        double emf = 0;
-        for (Battery bat : batterys) {
-            emf += bat.getEmf();
+        if (batterys.isEmpty()) {
+            equivalentBattery = null;
+            return;
         }
-        equivalentResistor.setResistance(emf);
+
+        double emf = 0.0;
+        for (Battery bat : batterys) {
+            if (bat.getEmf() != null) {
+                emf += bat.getEmf();
+            }
+        }
+
+        if (equivalentBattery == null) {
+            equivalentBattery = new Battery();
+        }
+        equivalentBattery.setEmf(emf);
     }
-    
+
     public void calculateCurrent() {
-        this.current =  equivalentBattery.getEmf() / equivalentResistor.getResistance();
+        if (equivalentBattery == null || equivalentResistor == null || equivalentResistor.getResistance() == null || equivalentResistor.getResistance() == 0.0) {
+            current = null;
+            return;
+        }
+
+        current = equivalentBattery.getEmf() / equivalentResistor.getResistance();
     }
-    
+
+    public void recalculateAll() {
+        calculateBattery();
+        calculateResistor();
+        calculateCapacitor();
+        calculateCurrent();
+
+        if (current != null) {
+            for (Resistor r : resistors) {
+                if (r.getResistance() != null) {
+                    r.calculateVoltage(current);
+                }
+            }
+        }
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;

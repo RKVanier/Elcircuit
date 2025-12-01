@@ -15,7 +15,7 @@ public class Component {
         this.voltage = null;
     }
     
-    public Component(double voltage) {
+    public Component(Double voltage) {
         this.voltage = voltage;
     }
     
@@ -46,11 +46,11 @@ public class Component {
         return "Component{" + "voltage=" + voltage + '}';
     }
     
-    public double getVoltage() {
+    public Double getVoltage() {
         return voltage;
     }
 
-    public void setVoltage(double voltage) {
+    public void setVoltage(Double voltage) {
         this.voltage = voltage;
     }
 }

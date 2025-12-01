@@ -16,6 +16,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 
 public class MainViewController {
@@ -45,7 +46,10 @@ public class MainViewController {
             this.to = to;
         }
     }
-
+    private boolean simulationStarted = false;
+    private PlacedComponent selectedComponent;
+    private double time = 0.0;
+    private javafx.animation.Timeline timer;
     private final List<Wire> wires = new ArrayList<>();
     private Circuit circuit = new Circuit();
     private final List<PlacedComponent> placedComponents = new ArrayList<>();
@@ -97,34 +101,83 @@ public class MainViewController {
 
     @FXML
     void pauseBtnPressed(ActionEvent event) {
-
+        timer.pause();
     }
 
     @FXML
     void resetBtnPressed(ActionEvent event) {
+        time = 0.0;
+        timer.stop();
+        simulationStarted = false;
+
         componentLayer.getChildren().clear();
         wireLayer.getChildren().clear();
-        wires.clear();
 
+        wires.clear();
         placedComponents.clear();
         circuit = new Circuit();
 
         voltageField.clear();
         currentField.clear();
         specialField.clear();
+
+        voltageField.setEditable(true);
+        specialField.setEditable(true);
+        currentField.setEditable(false);
     }
 
     @FXML
     void startBtnPressed(ActionEvent event) {
-
+        simulationStarted = true;
+        voltageField.clear();
+        specialField.clear();
+        voltageField.setEditable(false);
+        specialField.setEditable(false);
+        recomputeCircuit();
+        timer.play();
     }
 
     @FXML
     void initialize() {
-        System.out.println("Controller initialize()");
         setupWireDrawing();
         setupDragSources();
         setupDropTarget();
+
+        timer = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(
+                        javafx.util.Duration.seconds(0.1),
+                        e -> {
+                            time += 0.1;
+
+                            Resistor req = circuit.getEquivalentResistor();
+                            Battery beq = circuit.getEquivalentBattery();
+
+                            Double Req = (req != null) ? req.getResistance() : null;
+                            Double Veq = (beq != null) ? beq.getEmf() : null;
+
+                            if (Req == null || Req == 0.0 || circuit.getCapacitors().isEmpty()) {
+                                return;
+                            }
+
+                            for (Capacitor c : circuit.getCapacitors()) {
+                                c.updateVoltage(time, Req, Veq);
+                            }
+
+                            if (selectedComponent != null) {
+                                showComponentInfo(selectedComponent);
+                            }
+
+                            if (Circuit.current != null) {
+                                currentField.setText(String.format("%.3f A", Circuit.current));
+                            }
+                        }
+                )
+        );
+        timer.setCycleCount(javafx.animation.Animation.INDEFINITE);
+
+        voltageField.setEditable(true);
+        specialField.setEditable(true);
+        currentField.setEditable(false);
 
         assert batteryIcon != null : "fx:id=\"batteryIcon\" was not injected: check your FXML file 'FXML.fxml'.";
         assert capacitorIcon != null : "fx:id=\"capacitorIcon\" was not injected: check your FXML file 'FXML.fxml'.";
@@ -136,6 +189,128 @@ public class MainViewController {
         assert specialField != null : "fx:id=\"specialField\" was not injected: check your FXML file 'FXML.fxml'.";
         assert voltageField != null : "fx:id=\"voltageField\" was not injected: check your FXML file 'FXML.fxml'.";
         assert wireLayer != null : "fx:id=\"wireLayer\" was not injected: check your FXML file 'FXML.fxml'.";
+    }
+
+    private void recomputeCircuit() {
+        circuit.recalculateAll();
+
+        if (Circuit.current != null) {
+            currentField.setText(String.format("%.3f A", Circuit.current));
+        } else {
+            currentField.clear();
+        }
+    }
+
+    private void applyFieldsToComponent(PlacedComponent pc) {
+        if (pc == null || pc.model == null) {
+            return;
+        }
+
+        String specialText = specialField.getText().trim();
+        String voltageText = voltageField.getText().trim();
+
+        try {
+            if (pc.model instanceof Battery b) {
+                if (!voltageText.isEmpty()) {
+                    double emf = Double.parseDouble(voltageText);
+                    b.setEmf(emf);
+                }
+                System.out.println("Battery updated: emf = " + b.getEmf());
+            } else if (pc.model instanceof Resistor r) {
+                if (!specialText.isEmpty()) {
+                    double R = Double.parseDouble(specialText);
+                    r.setResistance(R);
+                }
+                System.out.println("Resistor updated: R = " + r.getResistance());
+            } else if (pc.model instanceof Capacitor c) {
+                if (!specialText.isEmpty() & !voltageText.isEmpty()) {
+                    double C = Double.parseDouble(specialText);
+                    double V = Double.parseDouble(voltageText);
+                    c.setCapacitance(C);
+                    c.setVoltage(V);
+                    System.out.println("Capacitor updated: C = " + c.getCapacitance());
+                    System.out.println("Capacitor updated: V = " + c.getVoltage());
+                } else if (!specialText.isEmpty()) {
+                    double C = Double.parseDouble(specialText);
+                    c.setCapacitance(C);
+                    System.out.println("Capacitor updated: C = " + c.getCapacitance());
+                }
+
+            }
+
+            recomputeCircuit();
+
+        } catch (NumberFormatException ex) {
+            System.out.println("Invalid number in text fields");
+        }
+    }
+
+    private void enableComponentSelect(ImageView iv) {
+        iv.setOnMouseClicked(e -> {
+            if (e.getButton() != MouseButton.PRIMARY) {
+                return;
+            }
+
+            for (PlacedComponent pc : placedComponents) {
+                if (pc.node == iv) {
+
+                    if (!simulationStarted) {
+                        applyFieldsToComponent(pc);
+                        System.out.println("Applied fields to " + pc.type);
+
+                        voltageField.clear();
+                        specialField.clear();
+                        currentField.clear();
+
+                    } else {
+                        selectedComponent = pc;
+                        showComponentInfo(pc);
+                        System.out.println("Showing info for " + pc.type);
+                    }
+
+                    break;
+                }
+            }
+        });
+    }
+
+    private void showComponentInfo(PlacedComponent pc) {
+        voltageField.clear();
+        specialField.clear();
+        currentField.clear();
+
+        if (pc == null || pc.model == null) {
+            return;
+        }
+
+        if (pc.model instanceof Battery b) {
+            if (b.getEmf() != null) {
+                voltageField.setText(b.getEmf().toString() + " V");
+            }
+            if (Circuit.current != null) {
+                currentField.setText(Circuit.current.toString() + " A");
+            }
+        } else if (pc.model instanceof Resistor r) {
+            if (r.getResistance() != null) {
+                specialField.setText(r.getResistance() + " Ω");
+            }
+            if (r.getVoltage() != null) {
+                voltageField.setText(r.getVoltage().toString() + " V");
+            }
+            if (Circuit.current != null) {
+                currentField.setText(Circuit.current.toString() + " A");
+            }
+        } else if (pc.model instanceof Capacitor c) {
+            if (c.getCapacitance() != null) {
+                specialField.setText(c.getCapacitance().toString() + " F");
+            }
+            if (c.getVoltage() != null) {
+                voltageField.setText(c.getVoltage().toString() + " V");
+            }
+            if (Circuit.current != null) {
+                currentField.setText(Circuit.current.toString() + " A");
+            }
+        }
     }
 
     private Object createModelForType(String type) {
@@ -156,6 +331,52 @@ public class MainViewController {
         };
     }
 
+    private void enableComponentDelete(ImageView iv) {
+        iv.setOnMousePressed(e -> {
+            if (e.getButton() != MouseButton.SECONDARY) {
+                return;
+            }
+
+            e.consume();
+
+            List<Wire> toRemove = new ArrayList<>();
+            for (Wire w : wires) {
+                if ((w.from != null && w.from.node == iv)
+                        || (w.to != null && w.to.node == iv)) {
+
+                    componentLayer.getChildren().remove(w.line);
+                    toRemove.add(w);
+                }
+            }
+            wires.removeAll(toRemove);
+
+            componentLayer.getChildren().remove(iv);
+
+            Object model = iv.getUserData();
+            placedComponents.removeIf(pc -> pc.node == iv);
+
+            if (model instanceof Battery b) {
+                circuit.getBatterys().remove(b);
+            } else if (model instanceof Resistor r) {
+                circuit.getResistors().remove(r);
+            } else if (model instanceof Capacitor c) {
+                circuit.getCapacitors().remove(c);
+            }
+
+            System.out.println("Component removed");
+        });
+    }
+
+    private void enableWireDelete(Line line) {
+        line.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.SECONDARY) {
+                componentLayer.getChildren().remove(line);
+                wires.removeIf(w -> w.line == line);
+                System.out.println("Wire removed");
+            }
+        });
+    }
+
     private void addModelToCircuit(String type, Object model) {
         if (model == null || type == null) {
             return;
@@ -171,28 +392,6 @@ public class MainViewController {
         }
     }
 
-    private PlacedComponent findNearestComponent(Point2D pParent, double maxDistance) {
-        PlacedComponent nearest = null;
-        double bestDist = maxDistance;
-
-        for (PlacedComponent pc : placedComponents) {
-            Bounds bounds = pc.node.getBoundsInParent();
-            double cx = bounds.getMinX() + bounds.getWidth() / 2;
-            double cy = bounds.getMinY() + bounds.getHeight() / 2;
-
-            double dx = pParent.getX() - cx;
-            double dy = pParent.getY() - cy;
-            double dist = Math.hypot(dx, dy);
-
-            if (dist < bestDist) {
-                bestDist = dist;
-                nearest = pc;
-            }
-        }
-
-        return nearest;
-    }
-
     private PlacedComponent findComponentAt(Point2D p) {
         for (PlacedComponent pc : placedComponents) {
             Bounds bounds = pc.node.getBoundsInParent();
@@ -206,6 +405,15 @@ public class MainViewController {
 
     private void setupWireDrawing() {
         componentLayer.setOnMousePressed(event -> {
+
+            if (event.getButton() != MouseButton.PRIMARY) {
+                return;
+            }
+
+            if (event.getTarget() instanceof ImageView) {
+                return;
+            }
+
             double paneW = componentLayer.getWidth();
             double paneH = componentLayer.getHeight();
 
@@ -227,7 +435,7 @@ public class MainViewController {
 
             currentWire = new Line();
             currentWire.setStroke(Color.WHITE);
-            currentWire.setStrokeWidth(3);
+            currentWire.setStrokeWidth(5);
             currentWire.setStartX(x);
             currentWire.setStartY(y);
             currentWire.setEndX(x);
@@ -237,7 +445,7 @@ public class MainViewController {
         });
 
         componentLayer.setOnMouseDragged(event -> {
-            if (currentWire != null) {
+            if (currentWire != null && event.getButton() == MouseButton.PRIMARY) {
                 double paneW = componentLayer.getWidth();
                 double paneH = componentLayer.getHeight();
 
@@ -263,7 +471,7 @@ public class MainViewController {
         });
 
         componentLayer.setOnMouseReleased(event -> {
-            if (currentWire != null) {
+            if (currentWire != null && event.getButton() == MouseButton.PRIMARY) {
                 double paneW = componentLayer.getWidth();
                 double paneH = componentLayer.getHeight();
 
@@ -303,12 +511,18 @@ public class MainViewController {
                 if (c1 != null && c2 != null && c1 != c2) {
                     currentWire.setStroke(Color.LIMEGREEN);
                     System.out.println("Wire connected: " + c1.type + " -> " + c2.type);
+
+                    Wire w = new Wire(currentWire, c1, c2);
+                    wires.add(w);
                 } else {
                     currentWire.setStroke(Color.DARKRED);
                     System.out.println("Wire not connected");
                 }
 
+                enableWireDelete(currentWire);
+
                 currentWire = null;
+
             }
         });
     }
@@ -349,7 +563,6 @@ public class MainViewController {
             if (db.hasImage()) {
                 ImageView iv = new ImageView(db.getImage());
                 iv.setPreserveRatio(true);
-                iv.setFitWidth(80);
 
                 Point2D p = componentLayer.sceneToLocal(event.getSceneX(), event.getSceneY());
                 double paneW = componentLayer.getWidth();
@@ -390,6 +603,9 @@ public class MainViewController {
 
                 iv.setUserData(model);
                 placedComponents.add(new PlacedComponent(type, iv, model));
+
+                enableComponentDelete(iv);
+                enableComponentSelect(iv);
 
                 success = true;
             }
