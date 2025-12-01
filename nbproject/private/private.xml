@@ -6,6 +6,14 @@
             <file>file:/C:/Users/Rayan/OneDrive/Documents/NetBeansProjects/Elcircuit/src/elcircuit/elcircuit/Controllers/MainViewController.java</file>
             <file>file:/C:/Users/Rayan/OneDrive/Documents/NetBeansProjects/Elcircuit/src/elcircuit/elcircuit/Elcircuit.java</file>
             <file>file:/C:/Users/Rayan/OneDrive/Documents/NetBeansProjects/Elcircuit/src/elcircuit/elcircuit/Controllers/WelcomeViewController.java</file>
+            <file>file:/C:/Users/Rayan/OneDrive/Documents/NetBeansProjects/Elcircuit/nbproject/build-impl.xml</file>
+            <file>file:/C:/Users/Rayan/OneDrive/Documents/NetBeansProjects/Elcircuit/src/elcircuit/elcircuit/Models/Battery.java</file>
+            <file>file:/C:/Users/Rayan/OneDrive/Documents/NetBeansProjects/Elcircuit/src/elcircuit/elcircuit/Models/Capacitor.java</file>
+            <file>file:/C:/Users/Rayan/OneDrive/Documents/NetBeansProjects/Elcircuit/src/elcircuit/elcircuit/Models/Circuit.java</file>
+            <file>file:/C:/Users/Rayan/OneDrive/Documents/NetBeansProjects/Elcircuit/src/elcircuit/elcircuit/Models/Component.java</file>
+            <file>file:/C:/Users/Rayan/OneDrive/Documents/NetBeansProjects/Elcircuit/src/elcircuit/elcircuit/Models/Resistor.java</file>
+            <file>file:/C:/Users/Rayan/OneDrive/Documents/NetBeansProjects/Elcircuit/src/elcircuit/elcircuit/Views/MainView.fxml</file>
+            <file>file:/C:/Users/Rayan/OneDrive/Documents/NetBeansProjects/Elcircuit/src/elcircuit/elcircuit/Views/WelcomeView.fxml</file>
         </group>
     </open-files>
 </project-private>

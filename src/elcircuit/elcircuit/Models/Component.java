@@ -1,4 +1,4 @@
-package elcircuit.Models;
+package elcircuit.elcircuit.Models;
 
 /**
  * Abstract representation of a circuit component that has a voltage across it.

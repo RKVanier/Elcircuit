@@ -1,4 +1,4 @@
-package elcircuit.Models;
+package elcircuit.elcircuit.Models;
 
 import java.util.Objects;
 

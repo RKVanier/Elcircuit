@@ -1,4 +1,4 @@
-package elcircuit.Controllers;
+package elcircuit.elcircuit.Controllers;
 
 import java.io.IOException;
 import java.net.URL;
@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -57,7 +58,7 @@ public class WelcomeViewController {
     @FXML
     void handleFormCalculator(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/elcircuit/elcircuit/Views/MainView.fxml"));
-        Stage stage = new Stage();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
         stage.show();
     }

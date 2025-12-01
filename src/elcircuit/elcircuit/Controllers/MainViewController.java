@@ -1,9 +1,10 @@
-package elcircuit.Controllers;
+package elcircuit.elcircuit.Controllers;
 
-import elcircuit.Models.Battery;
-import elcircuit.Models.Capacitor;
-import elcircuit.Models.Circuit;
-import elcircuit.Models.Resistor;
+import elcircuit.elcircuit.Models.Battery;
+import elcircuit.elcircuit.Models.Capacitor;
+import elcircuit.elcircuit.Models.Circuit;
+import elcircuit.elcircuit.Models.Resistor;
+import elcircuit.elcircuit.Models.Circuit;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
