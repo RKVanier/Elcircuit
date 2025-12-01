@@ -1,0 +1,43 @@
+.root {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+    -fx-font-family: "Comic Sans MS"; /* or any hand-written font you like */
+}
+
+/* big white rectangle around the circuit area */
+.circuit-frame {
+    -fx-padding: 10;
+    -fx-border-color: white;
+    -fx-border-width: 3;
+    -fx-background-color: transparent;
+}
+
+/* left info panel with white border and lines */
+.info-panel {
+    -fx-padding: 10;
+    -fx-spacing: 10;
+    -fx-border-color: white;
+    -fx-border-width: 3 3 3 3;
+    -fx-background-color: black;
+}
+
+.info-title {
+    -fx-font-size: 18px;
+    -fx-text-fill: white;
+}
+
+.info-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+}
+
+.info-small {
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+}
+
+.info-field {
+    -fx-background-color: black;
+    -fx-text-inner-color: white;
+    -fx-border-color: white;
+}
