@@ -1,9 +1,6 @@
 package elcircuit;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -12,39 +9,152 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.geometry.Bounds;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 
 public class MainViewController {
 
-    @FXML
-    private ImageView gridBackground;
-    @FXML
-    private Pane wireLayer;
-    @FXML
-    private Pane componentLayer;
+    private Line currentWire;
+
+    @FXML // fx:id="batteryIcon"
+    private ImageView batteryIcon; // Value injected by FXMLLoader
+
+    @FXML // fx:id="capacitorIcon"
+    private ImageView capacitorIcon; // Value injected by FXMLLoader
+
+    @FXML // fx:id="circuitStack"
+    private StackPane circuitStack; // Value injected by FXMLLoader
+
+    @FXML // fx:id="componentLayer"
+    private Pane componentLayer; // Value injected by FXMLLoader
+
+    @FXML // fx:id="currentField"
+    private TextField currentField; // Value injected by FXMLLoader
+
+    @FXML // fx:id="gridBackground"
+    private ImageView gridBackground; // Value injected by FXMLLoader
+
+    @FXML // fx:id="resistorIcon"
+    private ImageView resistorIcon; // Value injected by FXMLLoader
+
+    @FXML // fx:id="specialField"
+    private TextField specialField; // Value injected by FXMLLoader
+
+    @FXML // fx:id="voltageField"
+    private TextField voltageField; // Value injected by FXMLLoader
+
+    @FXML // fx:id="wireLayer"
+    private Pane wireLayer; // Value injected by FXMLLoader
 
     @FXML
-    private ImageView batteryIcon;
-    @FXML
-    private ImageView resistorIcon;
-    @FXML
-    private ImageView capacitorIcon;
-
-    @FXML
-    public void initialize() {
-        drawBottomWire();
+    void initialize() {
+        setupWireDrawing();
         setupDragSources();
         setupDropTarget();
+
+        assert batteryIcon != null : "fx:id=\"batteryIcon\" was not injected: check your FXML file 'FXML.fxml'.";
+        assert capacitorIcon != null : "fx:id=\"capacitorIcon\" was not injected: check your FXML file 'FXML.fxml'.";
+        assert circuitStack != null : "fx:id=\"circuitStack\" was not injected: check your FXML file 'FXML.fxml'.";
+        assert componentLayer != null : "fx:id=\"componentLayer\" was not injected: check your FXML file 'FXML.fxml'.";
+        assert currentField != null : "fx:id=\"currentField\" was not injected: check your FXML file 'FXML.fxml'.";
+        assert gridBackground != null : "fx:id=\"gridBackground\" was not injected: check your FXML file 'FXML.fxml'.";
+        assert resistorIcon != null : "fx:id=\"resistorIcon\" was not injected: check your FXML file 'FXML.fxml'.";
+        assert specialField != null : "fx:id=\"specialField\" was not injected: check your FXML file 'FXML.fxml'.";
+        assert voltageField != null : "fx:id=\"voltageField\" was not injected: check your FXML file 'FXML.fxml'.";
+        assert wireLayer != null : "fx:id=\"wireLayer\" was not injected: check your FXML file 'FXML.fxml'.";
     }
 
-    private void drawBottomWire() {
-        double width = gridBackground.getFitWidth();
-        double y = 430;
+    private void setupWireDrawing() {
+        circuitStack.setOnMousePressed(event -> {
+            double paneW = circuitStack.getWidth();
+            double paneH = circuitStack.getHeight();
 
-        Line wire = new Line(20, y, width - 20, y);
-        wire.setStroke(Color.WHITE);
-        wire.setStrokeWidth(3);
+            double x = event.getX();
+            double y = event.getY();
 
-        wireLayer.getChildren().add(wire);
+            if (x < 0) {
+                x = 0;
+            }
+            if (y < 0) {
+                y = 0;
+            }
+            if (x > paneW) {
+                x = paneW;
+            }
+            if (y > paneH) {
+                y = paneH;
+            }
+
+            currentWire = new Line();
+            currentWire.setStroke(Color.WHITE);
+            currentWire.setStrokeWidth(3);
+            currentWire.setStartX(x);
+            currentWire.setStartY(y);
+            currentWire.setEndX(x);
+            currentWire.setEndY(y);
+
+            wireLayer.getChildren().add(currentWire);
+        });
+
+        circuitStack.setOnMouseDragged(event -> {
+            if (currentWire != null) {
+                double paneW = circuitStack.getWidth();
+                double paneH = circuitStack.getHeight();
+
+                double x = event.getX();
+                double y = event.getY();
+
+                if (x < 0) {
+                    x = 0;
+                }
+                if (y < 0) {
+                    y = 0;
+                }
+                if (x > paneW) {
+                    x = paneW;
+                }
+                if (y > paneH) {
+                    y = paneH;
+                }
+
+                currentWire.setEndX(x);
+                currentWire.setEndY(y);
+            }
+        });
+
+        circuitStack.setOnMouseReleased(event -> {
+            if (currentWire != null) {
+                double paneW = circuitStack.getWidth();
+                double paneH = circuitStack.getHeight();
+
+                double x = event.getX();
+                double y = event.getY();
+
+                if (x < 0) {
+                    x = 0;
+                }
+                if (y < 0) {
+                    y = 0;
+                }
+                if (x > paneW) {
+                    x = paneW;
+                }
+                if (y > paneH) {
+                    y = paneH;
+                }
+
+                currentWire.setEndX(x);
+                currentWire.setEndY(y);
+
+                double dx = currentWire.getEndX() - currentWire.getStartX();
+                double dy = currentWire.getEndY() - currentWire.getStartY();
+                if (Math.hypot(dx, dy) < 5) {
+                    wireLayer.getChildren().remove(currentWire);
+                }
+
+                currentWire = null;
+            }
+        });
     }
 
     private void setupDragSources() {
@@ -82,7 +192,6 @@ public class MainViewController {
             if (db.hasImage()) {
                 ImageView iv = new ImageView(db.getImage());
                 iv.setPreserveRatio(true);
-//                iv.setFitWidth(80);
 
                 componentLayer.getChildren().add(iv);
 
