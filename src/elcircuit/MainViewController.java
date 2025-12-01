@@ -1,5 +1,7 @@
 package elcircuit;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -9,11 +11,27 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 
 public class MainViewController {
 
+    private static class PlacedComponent {
+
+        String type;
+        ImageView node;
+        Object model;
+
+        PlacedComponent(String type, ImageView node, Object model) {
+            this.type = type;
+            this.node = node;
+            this.model = model;
+        }
+    }
+
+    private Circuit circuit = new Circuit();
+    private final List<PlacedComponent> placedComponents = new ArrayList<>();
     private Line currentWire;
 
     @FXML // fx:id="batteryIcon"
@@ -64,13 +82,42 @@ public class MainViewController {
         assert wireLayer != null : "fx:id=\"wireLayer\" was not injected: check your FXML file 'FXML.fxml'.";
     }
 
+    private Object createModelForType(String type) {
+        return switch (type) {
+            case "BATTERY" ->
+                new Battery(5.0);
+            case "RESISTOR" ->
+                new Resistor(100.0, 0.0, 0.0);
+            case "CAPACITOR" ->
+                new Capacitor(1e-6, 0.0, 0.0);
+            default ->
+                null;
+        };
+    }
+
+    private void addModelToCircuit(String type, Object model) {
+        if (model == null) {
+            return;
+        }
+
+        switch (type) {
+            case "BATTERY" ->
+                circuit.getBatterys().add((Battery) model);
+            case "RESISTOR" ->
+                circuit.getResistors().add((Resistor) model);
+            case "CAPACITOR" ->
+                circuit.getCapacitors().add((Capacitor) model);
+        }
+    }
+
     private void setupWireDrawing() {
         circuitStack.setOnMousePressed(event -> {
-            double paneW = circuitStack.getWidth();
-            double paneH = circuitStack.getHeight();
+            Point2D p = wireLayer.sceneToLocal(event.getSceneX(), event.getSceneY());
+            double paneW = wireLayer.getWidth();
+            double paneH = wireLayer.getHeight();
 
-            double x = event.getX();
-            double y = event.getY();
+            double x = p.getX();
+            double y = p.getY();
 
             if (x < 0) {
                 x = 0;
@@ -98,11 +145,12 @@ public class MainViewController {
 
         circuitStack.setOnMouseDragged(event -> {
             if (currentWire != null) {
-                double paneW = circuitStack.getWidth();
-                double paneH = circuitStack.getHeight();
+                Point2D p = wireLayer.sceneToLocal(event.getSceneX(), event.getSceneY());
+                double paneW = wireLayer.getWidth();
+                double paneH = wireLayer.getHeight();
 
-                double x = event.getX();
-                double y = event.getY();
+                double x = p.getX();
+                double y = p.getY();
 
                 if (x < 0) {
                     x = 0;
@@ -124,11 +172,12 @@ public class MainViewController {
 
         circuitStack.setOnMouseReleased(event -> {
             if (currentWire != null) {
-                double paneW = circuitStack.getWidth();
-                double paneH = circuitStack.getHeight();
+                Point2D p = wireLayer.sceneToLocal(event.getSceneX(), event.getSceneY());
+                double paneW = wireLayer.getWidth();
+                double paneH = wireLayer.getHeight();
 
-                double x = event.getX();
-                double y = event.getY();
+                double x = p.getX();
+                double y = p.getY();
 
                 if (x < 0) {
                     x = 0;
@@ -190,11 +239,15 @@ public class MainViewController {
             boolean success = false;
 
             if (db.hasImage()) {
+                ImageView src = event.getGestureSource() instanceof ImageView
+                        ? (ImageView) event.getGestureSource()
+                        : null;
+
                 ImageView iv = new ImageView(db.getImage());
                 iv.setPreserveRatio(true);
+                iv.setFitWidth(src != null ? src.getFitWidth() : 80);
 
                 componentLayer.getChildren().add(iv);
-
                 componentLayer.applyCss();
                 componentLayer.layout();
 
@@ -205,24 +258,31 @@ public class MainViewController {
                 double paneW = componentLayer.getWidth();
                 double paneH = componentLayer.getHeight();
 
-                double targetX = event.getX() - w / 2;
-                double targetY = event.getY() - h / 2;
+                double x = event.getX() - w / 2;
+                double y = event.getY() - h / 2;
 
-                if (targetX < 0) {
-                    targetX = 0;
+                if (x < 0) {
+                    x = 0;
                 }
-                if (targetY < 0) {
-                    targetY = 0;
+                if (y < 0) {
+                    y = 0;
                 }
-                if (targetX + w > paneW) {
-                    targetX = paneW - w;
+                if (x + w > paneW) {
+                    x = paneW - w;
                 }
-                if (targetY + h > paneH) {
-                    targetY = paneH - h;
+                if (y + h > paneH) {
+                    y = paneH - h;
                 }
 
-                iv.setLayoutX(targetX);
-                iv.setLayoutY(targetY);
+                iv.setLayoutX(x);
+                iv.setLayoutY(y);
+
+                String type = db.getString();
+                Object model = createModelForType(type);
+                addModelToCircuit(type, model);
+
+                iv.setUserData(model);
+                placedComponents.add(new PlacedComponent(type, iv, model));
 
                 success = true;
             }
@@ -230,6 +290,6 @@ public class MainViewController {
             event.setDropCompleted(success);
             event.consume();
         });
-
     }
+
 }
