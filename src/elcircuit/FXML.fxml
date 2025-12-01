@@ -29,7 +29,7 @@
             <Label styleClass="info-small" text="Value (capacitance /" />
             <Label styleClass="info-small" text="resistance)" />
             <TextField fx:id="specialField" editable="false" styleClass="info-field" />
-         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
             <children>
                <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                   <children>
@@ -37,7 +37,12 @@
                      <Button fx:id="pauseBtn" mnemonicParsing="false" onAction="#pauseBtnPressed" style="-fx-background-radius: 30; -fx-border-radius: 30; -fx-background-color: #2651EB; -fx-border-width: 1.5; -fx-border-color: white;" text="Pause" />
                   </children>
                </HBox>
-               <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitButtonPressed" style="-fx-background-radius: 30; -fx-border-radius: 30; -fx-border-width: 1.5; -fx-background-color: red; -fx-border-color: white;" text="Exit" />
+               <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                  <children>
+                     <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitButtonPressed" style="-fx-background-radius: 30; -fx-border-radius: 30; -fx-border-width: 1.5; -fx-background-color: red; -fx-border-color: white;" text="Exit" />
+                     <Button fx:id="resetBtn" mnemonicParsing="false" onAction="#resetBtnPressed" style="-fx-background-radius: 30; -fx-border-radius: 30; -fx-background-color: yellow; -fx-border-width: 1.5; -fx-border-color: white;" text="Reset" />
+                  </children>
+               </HBox>
             </children>
          </VBox>
         </VBox>

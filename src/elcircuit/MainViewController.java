@@ -33,6 +33,20 @@ public class MainViewController {
         }
     }
 
+    private static class Wire {
+
+        Line line;
+        PlacedComponent from;
+        PlacedComponent to;
+
+        Wire(Line line, PlacedComponent from, PlacedComponent to) {
+            this.line = line;
+            this.from = from;
+            this.to = to;
+        }
+    }
+
+    private final List<Wire> wires = new ArrayList<>();
     private Circuit circuit = new Circuit();
     private final List<PlacedComponent> placedComponents = new ArrayList<>();
     private Line currentWire;
@@ -87,12 +101,27 @@ public class MainViewController {
     }
 
     @FXML
+    void resetBtnPressed(ActionEvent event) {
+        componentLayer.getChildren().clear();
+        wireLayer.getChildren().clear();
+        wires.clear();
+
+        placedComponents.clear();
+        circuit = new Circuit();
+
+        voltageField.clear();
+        currentField.clear();
+        specialField.clear();
+    }
+
+    @FXML
     void startBtnPressed(ActionEvent event) {
 
     }
 
     @FXML
     void initialize() {
+        System.out.println("Controller initialize()");
         setupWireDrawing();
         setupDragSources();
         setupDropTarget();
@@ -110,6 +139,11 @@ public class MainViewController {
     }
 
     private Object createModelForType(String type) {
+        if (type == null) {
+            System.out.println("createModelForType: type is null");
+            return null;
+        }
+
         return switch (type) {
             case "BATTERY" ->
                 new Battery(5.0);
@@ -123,7 +157,7 @@ public class MainViewController {
     }
 
     private void addModelToCircuit(String type, Object model) {
-        if (model == null) {
+        if (model == null || type == null) {
             return;
         }
 
@@ -137,14 +171,46 @@ public class MainViewController {
         }
     }
 
-    private void setupWireDrawing() {
-        circuitStack.setOnMousePressed(event -> {
-            Point2D p = wireLayer.sceneToLocal(event.getSceneX(), event.getSceneY());
-            double paneW = wireLayer.getWidth();
-            double paneH = wireLayer.getHeight();
+    private PlacedComponent findNearestComponent(Point2D pParent, double maxDistance) {
+        PlacedComponent nearest = null;
+        double bestDist = maxDistance;
 
-            double x = p.getX();
-            double y = p.getY();
+        for (PlacedComponent pc : placedComponents) {
+            Bounds bounds = pc.node.getBoundsInParent();
+            double cx = bounds.getMinX() + bounds.getWidth() / 2;
+            double cy = bounds.getMinY() + bounds.getHeight() / 2;
+
+            double dx = pParent.getX() - cx;
+            double dy = pParent.getY() - cy;
+            double dist = Math.hypot(dx, dy);
+
+            if (dist < bestDist) {
+                bestDist = dist;
+                nearest = pc;
+            }
+        }
+
+        return nearest;
+    }
+
+    private PlacedComponent findComponentAt(Point2D p) {
+        for (PlacedComponent pc : placedComponents) {
+            Bounds bounds = pc.node.getBoundsInParent();
+            if (bounds.contains(p)) {
+                System.out.println("Hit " + pc.type);
+                return pc;
+            }
+        }
+        return null;
+    }
+
+    private void setupWireDrawing() {
+        componentLayer.setOnMousePressed(event -> {
+            double paneW = componentLayer.getWidth();
+            double paneH = componentLayer.getHeight();
+
+            double x = event.getX();
+            double y = event.getY();
 
             if (x < 0) {
                 x = 0;
@@ -167,17 +233,16 @@ public class MainViewController {
             currentWire.setEndX(x);
             currentWire.setEndY(y);
 
-            wireLayer.getChildren().add(currentWire);
+            componentLayer.getChildren().add(currentWire);
         });
 
-        circuitStack.setOnMouseDragged(event -> {
+        componentLayer.setOnMouseDragged(event -> {
             if (currentWire != null) {
-                Point2D p = wireLayer.sceneToLocal(event.getSceneX(), event.getSceneY());
-                double paneW = wireLayer.getWidth();
-                double paneH = wireLayer.getHeight();
+                double paneW = componentLayer.getWidth();
+                double paneH = componentLayer.getHeight();
 
-                double x = p.getX();
-                double y = p.getY();
+                double x = event.getX();
+                double y = event.getY();
 
                 if (x < 0) {
                     x = 0;
@@ -197,14 +262,13 @@ public class MainViewController {
             }
         });
 
-        circuitStack.setOnMouseReleased(event -> {
+        componentLayer.setOnMouseReleased(event -> {
             if (currentWire != null) {
-                Point2D p = wireLayer.sceneToLocal(event.getSceneX(), event.getSceneY());
-                double paneW = wireLayer.getWidth();
-                double paneH = wireLayer.getHeight();
+                double paneW = componentLayer.getWidth();
+                double paneH = componentLayer.getHeight();
 
-                double x = p.getX();
-                double y = p.getY();
+                double x = event.getX();
+                double y = event.getY();
 
                 if (x < 0) {
                     x = 0;
@@ -225,7 +289,23 @@ public class MainViewController {
                 double dx = currentWire.getEndX() - currentWire.getStartX();
                 double dy = currentWire.getEndY() - currentWire.getStartY();
                 if (Math.hypot(dx, dy) < 5) {
-                    wireLayer.getChildren().remove(currentWire);
+                    componentLayer.getChildren().remove(currentWire);
+                    currentWire = null;
+                    return;
+                }
+
+                Point2D start = new Point2D(currentWire.getStartX(), currentWire.getStartY());
+                Point2D end = new Point2D(currentWire.getEndX(), currentWire.getEndY());
+
+                PlacedComponent c1 = findComponentAt(start);
+                PlacedComponent c2 = findComponentAt(end);
+
+                if (c1 != null && c2 != null && c1 != c2) {
+                    currentWire.setStroke(Color.LIMEGREEN);
+                    System.out.println("Wire connected: " + c1.type + " -> " + c2.type);
+                } else {
+                    currentWire.setStroke(Color.DARKRED);
+                    System.out.println("Wire not connected");
                 }
 
                 currentWire = null;
@@ -253,7 +333,7 @@ public class MainViewController {
     }
 
     private void setupDropTarget() {
-        componentLayer.setOnDragOver(event -> {
+        circuitStack.setOnDragOver(event -> {
             Dragboard db = event.getDragboard();
             if (db.hasImage()) {
                 event.acceptTransferModes(TransferMode.COPY);
@@ -261,31 +341,32 @@ public class MainViewController {
             event.consume();
         });
 
-        componentLayer.setOnDragDropped(event -> {
+        circuitStack.setOnDragDropped(event -> {
+
             Dragboard db = event.getDragboard();
             boolean success = false;
 
             if (db.hasImage()) {
-                ImageView src = event.getGestureSource() instanceof ImageView
-                        ? (ImageView) event.getGestureSource()
-                        : null;
-
                 ImageView iv = new ImageView(db.getImage());
                 iv.setPreserveRatio(true);
+                iv.setFitWidth(80);
+
+                Point2D p = componentLayer.sceneToLocal(event.getSceneX(), event.getSceneY());
+                double paneW = componentLayer.getWidth();
+                double paneH = componentLayer.getHeight();
+
+                double w;
+                double h;
 
                 componentLayer.getChildren().add(iv);
                 componentLayer.applyCss();
                 componentLayer.layout();
-
                 Bounds b = iv.getBoundsInParent();
-                double w = b.getWidth();
-                double h = b.getHeight();
+                w = b.getWidth();
+                h = b.getHeight();
 
-                double paneW = componentLayer.getWidth();
-                double paneH = componentLayer.getHeight();
-
-                double x = event.getX() - w / 2;
-                double y = event.getY() - h / 2;
+                double x = p.getX() - w / 2;
+                double y = p.getY() - h / 2;
 
                 if (x < 0) {
                     x = 0;
@@ -302,23 +383,6 @@ public class MainViewController {
 
                 iv.setLayoutX(x);
                 iv.setLayoutY(y);
-
-                iv.setOnMouseClicked(e -> {
-                    Object model = iv.getUserData();
-                    if (model instanceof Battery bat) {
-                        voltageField.setText(bat.getEmf() != null ? bat.getEmf().toString() + " V" : "");
-                        currentField.setText(circuit.current != null ? circuit.current.toString() + " A" : "");
-                        specialField.setText("null");
-                    } else if (model instanceof Resistor res) {
-                        voltageField.setText(res.getVoltage()+ " V");
-                        currentField.setText(circuit.current != null ? circuit.current.toString() + " A" : "");
-                        specialField.setText(res.getResistance() != null ? res.getResistance() + " Ω" : "");
-                    } else if (model instanceof Capacitor cap) {
-                        voltageField.setText(cap.getVoltage() + " V");
-                        currentField.setText(circuit.current != null ? circuit.current.toString() + " A" : "");
-                        specialField.setText(cap.getCapacitance() != null ? cap.getCapacitance() + " F" : "");
-                    }
-                });
 
                 String type = db.getString();
                 Object model = createModelForType(type);
