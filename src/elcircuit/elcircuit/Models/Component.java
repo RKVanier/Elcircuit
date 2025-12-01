@@ -2,10 +2,8 @@ package elcircuit.elcircuit.Models;
 
 /**
  * Abstract representation of a circuit component that has a voltage across it.
- * <p>
  * This base class is extended by concrete components such as
- * {@link Resistor} and {@link Capacitor}.
- * </p>
+ * Resistor and Capacitor.
  *
  * @author Rayan
  */
@@ -13,13 +11,13 @@ public class Component {
 
     /**
      * Voltage across this component in volts (V).
-     * May be {@code null} if not yet initialized.
+     * May be null if not yet initialized.
      */
     Double voltage;
 
     /**
      * Creates a component with no initial voltage.
-     * The voltage will be {@code null}.
+     * The voltage will be null.
      */
     public Component() {
         this.voltage = null;
@@ -28,7 +26,7 @@ public class Component {
     /**
      * Creates a component with an initial voltage.
      *
-     * @param voltage initial voltage in volts (V), may be {@code null}
+     * @param voltage initial voltage in volts (V), may be null
      */
     public Component(Double voltage) {
         this.voltage = voltage;
@@ -67,7 +65,7 @@ public class Component {
     /**
      * Returns the voltage across this component.
      *
-     * @return voltage in volts (V), or {@code null} if undefined
+     * @return voltage in volts (V), or null if undefined
      */
     public Double getVoltage() {
         return voltage;
@@ -76,7 +74,7 @@ public class Component {
     /**
      * Sets the voltage across this component.
      *
-     * @param voltage voltage in volts (V), may be {@code null}
+     * @param voltage voltage in volts (V), may be null
      */
     public void setVoltage(Double voltage) {
         this.voltage = voltage;

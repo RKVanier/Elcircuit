@@ -6,11 +6,9 @@ import java.util.Objects;
 
 /**
  * Represents a simple series DC circuit model.
- * <p>
  * The circuit can contain multiple batteries, resistors, and capacitors
  * all assumed to be connected in series. It keeps track of equivalent
  * values and the total current through the branch.
- * </p>
  *
  * @author Rayan
  */
@@ -68,13 +66,13 @@ public class Circuit {
     /**
      * Creates a circuit with already-initialized values.
      *
-     * @param current            initial current (A)
-     * @param equivalentBattery  equivalent battery
-     * @param batterys           list of batteries
-     * @param equivalentResistor equivalent resistor
-     * @param resistors          list of resistors
+     * @param current             initial current (A)
+     * @param equivalentBattery   equivalent battery
+     * @param batterys            list of batteries
+     * @param equivalentResistor  equivalent resistor
+     * @param resistors           list of resistors
      * @param equivalentCapacitor equivalent capacitor
-     * @param capacitors         list of capacitors
+     * @param capacitors          list of capacitors
      */
     public Circuit(Double current,
                    Battery equivalentBattery,
@@ -95,10 +93,8 @@ public class Circuit {
 
     /**
      * Calculates the equivalent capacitance for capacitors in series.
-     * <p>
-     * Uses the formula: {@code 1/Ceq = Σ(1/Ci)}.
-     * If there are no valid capacitors, {@code equivalentCapacitor} is set to {@code null}.
-     * </p>
+     * Uses the formula: 1 / Ceq = sum(1 / Ci).
+     * If there are no valid capacitors, equivalentCapacitor is set to null.
      */
     public void calculateCapacitor() {
         if (capacitors.isEmpty()) {
@@ -125,9 +121,9 @@ public class Circuit {
     }
 
     /**
-     * Calculates the equivalent resistance for resistors in series:
-     * {@code Req = ΣRi}.
-     * If there are no resistors, {@code equivalentResistor} is set to {@code null}.
+     * Calculates the equivalent resistance for resistors in series.
+     * Uses Req = sum(Ri).
+     * If there are no resistors, equivalentResistor is set to null.
      */
     public void calculateResistor() {
         if (resistors.isEmpty()) {
@@ -149,9 +145,9 @@ public class Circuit {
     }
 
     /**
-     * Calculates the equivalent battery emf for series sources:
-     * {@code Veq = ΣEi}.
-     * If there are no batteries, {@code equivalentBattery} is set to {@code null}.
+     * Calculates the equivalent battery emf for series sources.
+     * Uses Veq = sum(Ei).
+     * If there are no batteries, equivalentBattery is set to null.
      */
     public void calculateBattery() {
         if (batterys.isEmpty()) {
@@ -173,12 +169,9 @@ public class Circuit {
     }
 
     /**
-     * Calculates the series current using Ohm's law:
-     * {@code I = Veq / Req}.
-     * <p>
-     * If there is no valid equivalent battery or resistor, or {@code Req == 0},
-     * the current is set to {@code null}.
-     * </p>
+     * Calculates the series current using Ohm's law: I = Veq / Req.
+     * If there is no valid equivalent battery or resistor, or Req == 0,
+     * the current is set to null.
      */
     public void calculateCurrent() {
         if (equivalentBattery == null
@@ -196,10 +189,8 @@ public class Circuit {
     /**
      * Recalculates all equivalent values in the circuit:
      * battery, resistor, capacitor, and current.
-     * <p>
      * Also updates the voltage drop across each resistor if the current
      * is defined.
-     * </p>
      */
     public void recalculateAll() {
         calculateBattery();
@@ -321,7 +312,7 @@ public class Circuit {
     /**
      * Returns the current shared by all series components.
      *
-     * @return current in amperes (A), or {@code null} if undefined
+     * @return current in amperes (A), or null if undefined
      */
     public static Double getCurrent() {
         return current;

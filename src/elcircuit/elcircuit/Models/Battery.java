@@ -1,16 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package elcircuit.elcircuit.Models;
 
 import java.util.Objects;
 
 /**
  * Models an ideal DC voltage source (battery).
- * <p>
  * The battery is represented by its electromotive force (emf).
- * </p>
  *
  * @author Rayan
  */
@@ -23,7 +17,7 @@ public class Battery {
 
     /**
      * Creates a battery with no emf defined.
-     * The emf will be {@code null}.
+     * The emf will be null.
      */
     public Battery() {
         this.emf = null;
@@ -32,7 +26,7 @@ public class Battery {
     /**
      * Creates a battery with an initial emf.
      *
-     * @param emf emf in volts (V), may be {@code null}
+     * @param emf emf in volts (V), may be null
      */
     public Battery(Double emf) {
         this.emf = emf;
@@ -68,7 +62,7 @@ public class Battery {
     /**
      * Returns the emf of the battery.
      *
-     * @return emf in volts (V), or {@code null} if undefined
+     * @return emf in volts (V), or null if undefined
      */
     public Double getEmf() {
         return emf;
@@ -77,7 +71,7 @@ public class Battery {
     /**
      * Sets the emf of the battery.
      *
-     * @param emf emf in volts (V), may be {@code null}
+     * @param emf emf in volts (V), may be null
      */
     public void setEmf(Double emf) {
         this.emf = emf;

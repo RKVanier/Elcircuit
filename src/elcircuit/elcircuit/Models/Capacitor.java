@@ -4,11 +4,9 @@ import java.util.Objects;
 
 /**
  * Models an ideal capacitor in a DC series circuit.
- * <p>
  * The capacitor stores its capacitance, the current charge on the plates,
- * and the voltage (from {@link Component}). It also supports basic
- * RC charging/discharging behaviour for a series circuit.
- * </p>
+ * and the voltage. It also supports basic RC charging and discharging
+ * behaviour for a series circuit.
  *
  * @author Rayan
  */
@@ -31,7 +29,7 @@ public class Capacitor extends Component {
 
     /**
      * Creates a capacitor with no initial values.
-     * Capacitance, charge, and voltage will all be {@code null}.
+     * Capacitance, charge, and voltage will all be null.
      */
     public Capacitor() {
         super();
@@ -53,24 +51,23 @@ public class Capacitor extends Component {
     }
 
     /**
-     * Calculates the charge on the capacitor using {@code Q = C * V}
-     * and stores it in the {@code charge} field.
+     * Calculates the charge on the capacitor using Q = C * V
+     * and stores it in the charge field.
      */
     public void calculateCharge() {
         this.charge = this.voltage * this.capacitance;
     }
 
     /**
-     * Updates the capacitor voltage according to the RC charging/discharging
-     * equation in a series circuit and also updates the charge and current.
-     * <p>
-     * Uses:
-     * {@code Vc(t) = Vf + (Vi - Vf) * e^(-t / (R*C))}.
-     * </p>
+     * Updates the capacitor voltage according to the RC charging or
+     * discharging equation in a series circuit and also updates the
+     * charge and current.
      *
-     * @param time                time since the start of the simulation in seconds
-     * @param equivalentResistance equivalent series resistance (Ω)
-     * @param supplyVoltage       total supply voltage (V). If {@code null}, a discharge
+     * Uses: Vc(t) = Vf + (Vi - Vf) * e^(-t / (R * C)).
+     *
+     * @param time                 time since the start of the simulation in seconds
+     * @param equivalentResistance equivalent series resistance (ohms)
+     * @param supplyVoltage        total supply voltage (V). If null, a discharge
      *                             towards 0 V is assumed.
      */
     public void updateVoltage(double time,
@@ -135,7 +132,7 @@ public class Capacitor extends Component {
     /**
      * Returns the capacitance.
      *
-     * @return capacitance in farads (F), or {@code null} if undefined
+     * @return capacitance in farads (F), or null if undefined
      */
     public Double getCapacitance() {
         return capacitance;
@@ -153,7 +150,7 @@ public class Capacitor extends Component {
     /**
      * Returns the current charge on the capacitor.
      *
-     * @return charge in coulombs (C), may be {@code null}
+     * @return charge in coulombs (C), may be null
      */
     public Double getCharge() {
         return charge;
@@ -171,7 +168,7 @@ public class Capacitor extends Component {
     /**
      * Returns the instantaneous current through the capacitor.
      *
-     * @return current in amperes (A), may be {@code null}
+     * @return current in amperes (A), may be null
      */
     public Double getCurrent() {
         return current;
@@ -189,7 +186,7 @@ public class Capacitor extends Component {
     /**
      * Returns the voltage across the capacitor.
      *
-     * @return voltage in volts (V), or {@code null} if undefined
+     * @return voltage in volts (V), or null if undefined
      */
     public Double getVoltage() {
         return voltage;
@@ -204,4 +201,3 @@ public class Capacitor extends Component {
         this.voltage = voltage;
     }
 }
-

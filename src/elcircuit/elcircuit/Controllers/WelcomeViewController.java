@@ -15,10 +15,8 @@ import javafx.stage.Stage;
 
 /**
  * Controller for the welcome screen of the ElCircuit application.
- * <p>
  * Provides buttons to exit the application or open the main circuit
  * simulator view.
- * </p>
  *
  * @author Rayan
  */
@@ -48,9 +46,7 @@ public class WelcomeViewController {
 
     /**
      * Handles the "Form Calculator" button.
-     * <p>
-     * Opens the main circuit simulator window defined by {@code MainView.fxml}.
-     * </p>
+     * Opens the main circuit simulator window defined by MainView.fxml.
      *
      * @param event button click event
      * @throws IOException if the FXML cannot be loaded

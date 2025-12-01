@@ -1,14 +1,10 @@
-
 package elcircuit.elcircuit.Models;
 
 import java.util.Objects;
 
 /**
  * Models an ideal resistor in a DC circuit.
- * <p>
- * The resistor stores its resistance (in ohms) and the voltage
- * across it, inherited from {@link Component}.
- * </p>
+ * The resistor stores its resistance in ohms and the voltage across it.
  *
  * @author Rayan
  */
@@ -16,13 +12,13 @@ public class Resistor extends Component {
 
     /**
      * Resistance of the resistor in ohms (Ω).
-     * May be {@code null} if not yet set.
+     * May be null if not yet set.
      */
     Double resistance;
 
     /**
      * Creates a resistor with no resistance value set.
-     * The resistance and voltage will both be {@code null}.
+     * The resistance and voltage will both be null.
      */
     public Resistor() {
         super();
@@ -43,7 +39,7 @@ public class Resistor extends Component {
 
     /**
      * Calculates and stores the voltage across the resistor using Ohm's law:
-     * {@code V = I * R}.
+     * V = I * R.
      *
      * @param current current through the resistor in amperes (A)
      */
@@ -81,7 +77,7 @@ public class Resistor extends Component {
     /**
      * Returns the resistance of this resistor.
      *
-     * @return resistance in ohms (Ω), or {@code null} if not set
+     * @return resistance in ohms (Ω), or null if not set
      */
     public Double getResistance() {
         return resistance;
@@ -90,7 +86,7 @@ public class Resistor extends Component {
     /**
      * Sets the resistance of this resistor.
      *
-     * @param resistance resistance in ohms (Ω), may be {@code null}
+     * @param resistance resistance in ohms (Ω), may be null
      */
     public void setResistance(Double resistance) {
         this.resistance = resistance;

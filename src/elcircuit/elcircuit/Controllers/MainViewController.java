@@ -2,7 +2,6 @@ package elcircuit.elcircuit.Controllers;
 
 import elcircuit.elcircuit.Models.Battery;
 import elcircuit.elcircuit.Models.Capacitor;
-import elcircuit.elcircuit.Models.Circuit;
 import elcircuit.elcircuit.Models.Resistor;
 import elcircuit.elcircuit.Models.Circuit;
 import java.util.ArrayList;
@@ -26,16 +25,13 @@ import javafx.scene.layout.StackPane;
 
 /**
  * Controller for the main ElCircuit simulator view.
- * <p>
+ *
  * Responsibilities:
- * <ul>
- *   <li>Handle drag-and-drop placement of batteries, resistors, and capacitors</li>
- *   <li>Draw and delete wires between placed components</li>
- *   <li>Maintain a {@link Circuit} model and update it from user input</li>
- *   <li>Run a time-based RC simulation using a {@code Timeline}</li>
- *   <li>Display voltages, current, and capacitor charge in the side panel</li>
- * </ul>
- * </p>
+ * - Handle drag-and-drop placement of batteries, resistors, and capacitors
+ * - Draw and delete wires between placed components
+ * - Maintain a Circuit model and update it from user input
+ * - Run a time-based RC simulation using a Timeline
+ * - Display voltages, current, and capacitor charge in the side panel
  *
  * @author Rayan
  */
@@ -164,13 +160,12 @@ public class MainViewController {
     }
 
     /**
-     * Handles the Reset button:
-     * <ul>
-     *   <li>Resets time and stops the timer</li>
-     *   <li>Clears all components and wires from the canvas</li>
-     *   <li>Resets the {@link Circuit} model</li>
-     *   <li>Clears text fields and re-enables editing</li>
-     * </ul>
+     * Handles the Reset button.
+     * Responsibilities:
+     * - Resets time and stops the timer
+     * - Clears all components and wires from the canvas
+     * - Resets the Circuit model
+     * - Clears text fields and re-enables editing
      *
      * @param event button click event
      */
@@ -199,13 +194,12 @@ public class MainViewController {
     }
 
     /**
-     * Handles the Start button:
-     * <ul>
-     *   <li>Marks the simulation as started</li>
-     *   <li>Clears side-panel fields and disables editing</li>
-     *   <li>Recomputes the circuit equivalent values</li>
-     *   <li>Starts the simulation timer</li>
-     * </ul>
+     * Handles the Start button.
+     * Responsibilities:
+     * - Marks the simulation as started
+     * - Clears side-panel fields and disables editing
+     * - Recomputes the circuit equivalent values
+     * - Starts the simulation timer
      *
      * @param event button click event
      */
@@ -226,16 +220,13 @@ public class MainViewController {
 
     /**
      * Initializes the controller after FXML loading.
-     * <p>
+     *
      * Sets up:
-     * <ul>
-     *   <li>Wire drawing handlers on the component layer</li>
-     *   <li>Drag-and-drop sources (palette icons) and drop target</li>
-     *   <li>The simulation {@code Timeline} that advances time and updates current/voltages</li>
-     *   <li>Initial editable state of text fields</li>
-     *   <li>Assertions to verify FXML injection</li>
-     * </ul>
-     * </p>
+     * - Wire drawing handlers on the component layer
+     * - Drag-and-drop sources (palette icons) and drop target
+     * - The simulation Timeline that advances time and updates current and voltages
+     * - Initial editable state of text fields
+     * - Assertions to verify FXML injection
      */
     @FXML
     void initialize() {
@@ -357,10 +348,9 @@ public class MainViewController {
     /**
      * Reads values from the side-panel text fields and applies them
      * to the given placed component's model (battery, resistor, or capacitor).
-     * <p>
-     * Used before the simulation has started when the user clicks a component
-     * to "confirm" the entered values.
-     * </p>
+     *
+     * This is used before the simulation has started when the user clicks a component
+     * to confirm the entered values.
      *
      * @param pc placed component to update
      */
@@ -410,10 +400,9 @@ public class MainViewController {
 
     /**
      * Enables selection behaviour for a placed component ImageView.
-     * <ul>
-     *   <li>Before simulation: clicking applies field values to that component.</li>
-     *   <li>After simulation: clicking shows that component's info on the side panel.</li>
-     * </ul>
+     *
+     * Before simulation: clicking applies field values to that component.
+     * After simulation: clicking shows that component's info on the side panel.
      *
      * @param iv ImageView representing a placed component
      */
@@ -450,15 +439,12 @@ public class MainViewController {
 
     /**
      * Displays the details of the given placed component in the side-panel fields.
-     * <p>
+     *
      * Shows:
-     * <ul>
-     *   <li>Battery: emf</li>
-     *   <li>Resistor: R and voltage across it</li>
-     *   <li>Capacitor: C, voltage, and charge Q</li>
-     *   <li>Circuit current I</li>
-     * </ul>
-     * </p>
+     * - Battery: emf
+     * - Resistor: resistance and voltage across it
+     * - Capacitor: capacitance, voltage, and charge Q
+     * - Circuit current I
      *
      * @param pc component whose info should be shown
      */
@@ -526,14 +512,11 @@ public class MainViewController {
 
     /**
      * Enables right-click deletion for a placed component.
-     * <p>
+     *
      * Removes:
-     * <ul>
-     *   <li>The component ImageView</li>
-     *   <li>All wires connected to it</li>
-     *   <li>The underlying model from the {@link Circuit}</li>
-     * </ul>
-     * </p>
+     * - The component ImageView
+     * - All wires connected to it
+     * - The underlying model from the Circuit
      *
      * @param iv ImageView representing the component
      */
@@ -618,7 +601,7 @@ public class MainViewController {
      * Used when finishing a wire to see which components the wire connects.
      *
      * @param p point in the component layer's coordinate system
-     * @return matching {@link PlacedComponent}, or {@code null} if none hit
+     * @return matching PlacedComponent, or {@code null} if none hit
      */
     private PlacedComponent findComponentAt(Point2D p) {
         for (PlacedComponent pc : placedComponents) {
@@ -634,10 +617,9 @@ public class MainViewController {
     /**
      * Configures mouse handlers on the component layer to allow users
      * to draw wires by clicking and dragging on empty space.
-     * <p>
+     *
      * Wires start on mouse press, update on drag, and finalize on release,
      * possibly connecting two components.
-     * </p>
      */
     private void setupWireDrawing() {
         componentLayer.setOnMousePressed(event -> {
@@ -781,9 +763,8 @@ public class MainViewController {
 
     /**
      * Configures a single palette ImageView as a drag source.
-     * <p>
+     *
      * When dragging starts, the image and a type string are placed on the dragboard.
-     * </p>
      *
      * @param source palette ImageView
      * @param type   associated model type ("BATTERY", "RESISTOR", "CAPACITOR")
@@ -804,10 +785,9 @@ public class MainViewController {
     /**
      * Configures the circuit stack as a drag target so that palette components
      * can be dropped into the circuit area.
-     * <p>
+     *
      * On drop, an ImageView is created at the mouse position, a model instance
      * is created and stored, and the component is added to the circuit.
-     * </p>
      */
     private void setupDropTarget() {
         circuitStack.setOnDragOver(event -> {
