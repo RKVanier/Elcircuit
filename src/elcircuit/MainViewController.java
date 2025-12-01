@@ -11,10 +11,9 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.image.Image;
 import javafx.geometry.Bounds;
 
-public class MainViewController implements Initializable {
+public class MainViewController {
 
     @FXML
     private ImageView gridBackground;
@@ -30,8 +29,8 @@ public class MainViewController implements Initializable {
     @FXML
     private ImageView capacitorIcon;
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    @FXML
+    public void initialize() {
         drawBottomWire();
         setupDragSources();
         setupDropTarget();
@@ -83,7 +82,7 @@ public class MainViewController implements Initializable {
             if (db.hasImage()) {
                 ImageView iv = new ImageView(db.getImage());
                 iv.setPreserveRatio(true);
-                iv.setFitWidth(80);
+//                iv.setFitWidth(80);
 
                 componentLayer.getChildren().add(iv);
 
