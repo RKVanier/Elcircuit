@@ -2,6 +2,8 @@ package elcircuit;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -12,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 
@@ -49,8 +52,14 @@ public class MainViewController {
     @FXML // fx:id="currentField"
     private TextField currentField; // Value injected by FXMLLoader
 
+    @FXML // fx:id="exitButton"
+    private Button exitButton; // Value injected by FXMLLoader
+
     @FXML // fx:id="gridBackground"
     private ImageView gridBackground; // Value injected by FXMLLoader
+
+    @FXML // fx:id="pauseBtn"
+    private Button pauseBtn; // Value injected by FXMLLoader
 
     @FXML // fx:id="resistorIcon"
     private ImageView resistorIcon; // Value injected by FXMLLoader
@@ -58,11 +67,29 @@ public class MainViewController {
     @FXML // fx:id="specialField"
     private TextField specialField; // Value injected by FXMLLoader
 
+    @FXML // fx:id="startBtn"
+    private Button startBtn; // Value injected by FXMLLoader
+
     @FXML // fx:id="voltageField"
     private TextField voltageField; // Value injected by FXMLLoader
 
     @FXML // fx:id="wireLayer"
     private Pane wireLayer; // Value injected by FXMLLoader
+
+    @FXML
+    void exitButtonPressed(ActionEvent event) {
+        Platform.exit();
+    }
+
+    @FXML
+    void pauseBtnPressed(ActionEvent event) {
+
+    }
+
+    @FXML
+    void startBtnPressed(ActionEvent event) {
+
+    }
 
     @FXML
     void initialize() {
@@ -245,7 +272,6 @@ public class MainViewController {
 
                 ImageView iv = new ImageView(db.getImage());
                 iv.setPreserveRatio(true);
-                iv.setFitWidth(src != null ? src.getFitWidth() : 80);
 
                 componentLayer.getChildren().add(iv);
                 componentLayer.applyCss();
@@ -276,6 +302,23 @@ public class MainViewController {
 
                 iv.setLayoutX(x);
                 iv.setLayoutY(y);
+
+                iv.setOnMouseClicked(e -> {
+                    Object model = iv.getUserData();
+                    if (model instanceof Battery bat) {
+                        voltageField.setText(bat.getEmf() != null ? bat.getEmf().toString() + " V" : "");
+                        currentField.setText(circuit.current != null ? circuit.current.toString() + " A" : "");
+                        specialField.setText("null");
+                    } else if (model instanceof Resistor res) {
+                        voltageField.setText(res.getVoltage()+ " V");
+                        currentField.setText(circuit.current != null ? circuit.current.toString() + " A" : "");
+                        specialField.setText(res.getResistance() != null ? res.getResistance() + " Ω" : "");
+                    } else if (model instanceof Capacitor cap) {
+                        voltageField.setText(cap.getVoltage() + " V");
+                        currentField.setText(circuit.current != null ? circuit.current.toString() + " A" : "");
+                        specialField.setText(cap.getCapacitance() != null ? cap.getCapacitance() + " F" : "");
+                    }
+                });
 
                 String type = db.getString();
                 Object model = createModelForType(type);

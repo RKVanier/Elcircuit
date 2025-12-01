@@ -27,20 +27,17 @@ public class Capacitor extends Component {
         this.charge = charge;
     }
 
-    public void calculateVoltage() {
-        this.voltage = this.charge / this.capacitance;
+    public void calculateCharge() {
+        this.charge = this.voltage * this.capacitance;
     }
 
-    public void calculateCharging(double time, double equivalentResistance, double maxVoltage) {
+    public void updateVoltage(double time, double equivalentResistance, Double supplyVoltage) {
         double tau = equivalentResistance * this.capacitance;
-        this.voltage = maxVoltage * (1 - Math.exp(-time / tau));
-        this.charge = this.capacitance * this.voltage;
-    }
+        double vFinal = (supplyVoltage == null) ? 0.0 : supplyVoltage;
+        double vInitial = (this.voltage == null) ? 0.0 : this.voltage;
 
-    public void calculateDischarging(double time, double equivalentResistance, double maxVoltage) {
-        double tau = equivalentResistance * this.capacitance;
-        this.voltage = maxVoltage * Math.exp(-time / tau);
-        this.charge = this.capacitance * this.voltage;
+        this.voltage = vFinal + (vInitial - vFinal) * Math.exp(-time / tau);
+        calculateCharge();
     }
 
     @Override
