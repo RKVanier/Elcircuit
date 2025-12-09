@@ -33,3 +33,21 @@ Click a component to view:
 
 ### Deleting Items
 - Right-click any component or wire to delete it.
+
+---
+
+## Teamwork Summary
+
+**Rayan**  
+- Designed and initiated the core model classes (Battery, Resistor, Capacitor, Circuit).  
+- Implemented the main controller logic, including drag-and-drop behavior, wire creation, simulation timing, and UI interaction flow.  
+- Added documentation comments and JavaDoc throughout controller-related code.
+
+**Olajare**  
+- Completed and refined the model classes by implementing calculation and simulation methods.  
+- Created the visual layout of the application, including the full FXML interface and component arrangement.  
+- Added documentation comments and JavaDoc throughout the model classes.
+
+**Shared Contributions**  
+- Both team members collaborated on writing JavaDoc and inline comments.  
+- Both team members collaborated on testing, debugging, and refining the overall simulator to ensure correct RC behavior and smooth user interaction.
