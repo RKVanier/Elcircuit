@@ -17,7 +17,7 @@ This simulator is designed as a visual learning tool to help understand real RC 
 ### Building the Circuit
 - Drag components (battery, resistor, capacitor) into the grid.
 - Before the simulation starts, click a component to apply the values you entered in the side panel.
-- Draw wires by clicking and dragging between empty points in the grid.
+- Draw wires by clicking and dragging between components(Wires must touch both components to turn green).
 
 ### Running the Simulation
 - Press Start to begin the simulation.
