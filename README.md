@@ -44,7 +44,7 @@ Click a component to view:
 - Added documentation comments and JavaDoc throughout controller-related code.
 
 **Olajare**  
-- Completed and refined the model classes by implementing calculation and simulation methods.  
+- Completed and refined the model classes by implementing calculation and simulation methods and implementation of those in the controller.  
 - Created the visual layout of the application, including the full FXML interface and component arrangement.  
 - Added documentation comments and JavaDoc throughout the model classes.
 
