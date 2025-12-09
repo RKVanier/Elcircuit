@@ -1,0 +1,35 @@
+# ElCircuit – JavaFX RC Circuit Simulator
+
+ElCircuit is an interactive JavaFX-based electrical circuit simulator that allows users to visually build simple DC circuits.  
+Users can drag and drop batteries, resistors, and capacitors, connect them with wires, and run a real-time simulation that shows:
+
+- Circuit current (I)
+- Voltage across each component
+- Capacitor charging and discharging
+- Capacitor charge (Q)
+
+This simulator is designed as a visual learning tool to help understand real RC circuit behavior.
+
+---
+
+## How to Use the Simulator
+
+### Building the Circuit
+- Drag components (battery, resistor, capacitor) into the grid.
+- Before the simulation starts, click a component to apply the values you entered in the side panel.
+- Draw wires by clicking and dragging between empty points in the grid.
+
+### Running the Simulation
+- Press Start to begin the simulation.
+- Press Pause to pause the simulation.
+- Press Reset to clear the circuit and restart.
+
+### Inspecting Components During Simulation
+Click a component to view:
+- Voltage  
+- Resistance / Capacitance  
+- Capacitor charge  
+- Current  
+
+### Deleting Items
+- Right-click any component or wire to delete it.
