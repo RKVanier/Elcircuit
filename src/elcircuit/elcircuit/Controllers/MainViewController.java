@@ -26,12 +26,11 @@ import javafx.scene.layout.StackPane;
 /**
  * Controller for the main ElCircuit simulator view.
  *
- * Responsibilities:
- * - Handle drag-and-drop placement of batteries, resistors, and capacitors
- * - Draw and delete wires between placed components
- * - Maintain a Circuit model and update it from user input
- * - Run a time-based RC simulation using a Timeline
- * - Display voltages, current, and capacitor charge in the side panel
+ * Responsibilities: - Handle drag-and-drop placement of batteries, resistors,
+ * and capacitors - Draw and delete wires between placed components - Maintain a
+ * Circuit model and update it from user input - Run a time-based RC simulation
+ * using a Timeline - Display voltages, current, and capacitor charge in the
+ * side panel
  *
  * @author Rayan
  */
@@ -42,11 +41,11 @@ public class MainViewController {
      * and the underlying model object (Battery, Resistor, or Capacitor).
      */
     private static class PlacedComponent {
-
+        
         String type;
         ImageView node;
         Object model;
-
+        
         PlacedComponent(String type, ImageView node, Object model) {
             this.type = type;
             this.node = node;
@@ -58,11 +57,11 @@ public class MainViewController {
      * Helper class representing a wire drawn between two placed components.
      */
     private static class Wire {
-
+        
         Line line;
         PlacedComponent from;
         PlacedComponent to;
-
+        
         Wire(Line line, PlacedComponent from, PlacedComponent to) {
             this.line = line;
             this.from = from;
@@ -70,30 +69,48 @@ public class MainViewController {
         }
     }
 
-    /** Flag indicating whether the simulation has started (Start button pressed). */
+    /**
+     * Flag indicating whether the simulation has started (Start button
+     * pressed).
+     */
     private boolean simulationStarted = false;
 
-    /** Currently selected component when simulation is running (for side-panel info). */
+    /**
+     * Currently selected component when simulation is running (for side-panel
+     * info).
+     */
     private PlacedComponent selectedComponent;
 
-    /** Simulation time (seconds) incremented by the Timeline. */
+    /**
+     * Simulation time (seconds) incremented by the Timeline.
+     */
     private double time = 0.0;
 
-    /** JavaFX timeline used to advance the simulation. */
+    /**
+     * JavaFX timeline used to advance the simulation.
+     */
     private javafx.animation.Timeline timer;
 
-    /** All wires currently drawn in the circuit area. */
+    /**
+     * All wires currently drawn in the circuit area.
+     */
     private final List<Wire> wires = new ArrayList<>();
 
-    /** Underlying circuit model (batteries, resistors, capacitors). */
+    /**
+     * Underlying circuit model (batteries, resistors, capacitors).
+     */
     private Circuit circuit = new Circuit();
 
-    /** All components that have been dropped into the circuit area. */
+    /**
+     * All components that have been dropped into the circuit area.
+     */
     private final List<PlacedComponent> placedComponents = new ArrayList<>();
 
-    /** Line currently being drawn as the user drags to create a wire. */
+    /**
+     * Line currently being drawn as the user drags to create a wire.
+     */
     private Line currentWire;
-
+    
     @FXML // fx:id="batteryIcon"
     private ImageView batteryIcon; // Palette icon for battery
 
@@ -133,6 +150,9 @@ public class MainViewController {
     @FXML // fx:id="startBtn"
     private Button startBtn; // Start simulation
 
+    @FXML // fx:id="timeField"
+    private TextField timeField; // Value injected by FXMLLoader
+    
     @FXML // fx:id="voltageField"
     private TextField voltageField; // Voltage for battery/resistor/capacitor
 
@@ -160,12 +180,9 @@ public class MainViewController {
     }
 
     /**
-     * Handles the Reset button.
-     * Responsibilities:
-     * - Resets time and stops the timer
-     * - Clears all components and wires from the canvas
-     * - Resets the Circuit model
-     * - Clears text fields and re-enables editing
+     * Handles the Reset button. Responsibilities: - Resets time and stops the
+     * timer - Clears all components and wires from the canvas - Resets the
+     * Circuit model - Clears text fields and re-enables editing
      *
      * @param event button click event
      */
@@ -174,19 +191,20 @@ public class MainViewController {
         time = 0.0;
         timer.stop();
         simulationStarted = false;
-
+        
         componentLayer.getChildren().clear();
         wireLayer.getChildren().clear();
-
+        
         wires.clear();
         placedComponents.clear();
         circuit = new Circuit();
-
+        
         voltageField.clear();
         currentField.clear();
         specialField.clear();
         specialField1.clear();
-
+        timeField.clear();
+        
         voltageField.setEditable(true);
         specialField.setEditable(true);
         specialField1.setEditable(true);
@@ -194,12 +212,9 @@ public class MainViewController {
     }
 
     /**
-     * Handles the Start button.
-     * Responsibilities:
-     * - Marks the simulation as started
-     * - Clears side-panel fields and disables editing
-     * - Recomputes the circuit equivalent values
-     * - Starts the simulation timer
+     * Handles the Start button. Responsibilities: - Marks the simulation as
+     * started - Clears side-panel fields and disables editing - Recomputes the
+     * circuit equivalent values - Starts the simulation timer
      *
      * @param event button click event
      */
@@ -209,11 +224,11 @@ public class MainViewController {
         voltageField.clear();
         specialField.clear();
         specialField1.clear();
-
+        
         voltageField.setEditable(false);
         specialField.setEditable(false);
         specialField1.setEditable(false);
-
+        
         recomputeCircuit();
         timer.play();
     }
@@ -221,12 +236,10 @@ public class MainViewController {
     /**
      * Initializes the controller after FXML loading.
      *
-     * Sets up:
-     * - Wire drawing handlers on the component layer
-     * - Drag-and-drop sources (palette icons) and drop target
-     * - The simulation Timeline that advances time and updates current and voltages
-     * - Initial editable state of text fields
-     * - Assertions to verify FXML injection
+     * Sets up: - Wire drawing handlers on the component layer - Drag-and-drop
+     * sources (palette icons) and drop target - The simulation Timeline that
+     * advances time and updates current and voltages - Initial editable state
+     * of text fields - Assertions to verify FXML injection
      */
     @FXML
     void initialize() {
@@ -263,7 +276,7 @@ public class MainViewController {
                                 currentField.clear();
                                 return;
                             }
-
+                            
                             double I;
 
                             // If there is at least one capacitor, use RC behaviour
@@ -285,7 +298,7 @@ public class MainViewController {
                                 // Pure resistive circuit
                                 I = Veq / Req;
                             }
-
+                            
                             Circuit.setCurrent(I);
 
                             // Update voltage across each resistor (Ohm's law)
@@ -294,20 +307,22 @@ public class MainViewController {
                                     r.calculateVoltage(I);
                                 }
                             }
-
-                            currentField.setText(String.format("%.4f A", I));
+                            
+                            currentField.setText(String.format("%.4f A", Math.abs(I)));
 
                             // If a component is selected, refresh its displayed info
                             if (simulationStarted && selectedComponent != null) {
                                 showComponentInfo(selectedComponent);
                             }
-
-                            System.out.println("t = " + time + " s, I = " + I + " A");
+                            
+                            //Updates the text field with time
+                            timeField.setText(String.valueOf(time));
+                            
                         }
                 )
         );
         timer.setCycleCount(javafx.animation.Animation.INDEFINITE);
-
+        
         voltageField.setEditable(true);
         specialField.setEditable(true);
         specialField1.setEditable(true);
@@ -327,17 +342,18 @@ public class MainViewController {
         assert specialField != null : "fx:id=\"specialField\" was not injected: check your FXML file 'FXML.fxml'.";
         assert specialField1 != null : "fx:id=\"specialField1\" was not injected: check your FXML file 'FXML.fxml'.";
         assert startBtn != null : "fx:id=\"startBtn\" was not injected: check your FXML file 'FXML.fxml'.";
+        assert timeField != null : "fx:id=\"timeField\" was not injected: check your FXML file 'MainView.fxml'.";
         assert voltageField != null : "fx:id=\"voltageField\" was not injected: check your FXML file 'FXML.fxml'.";
         assert wireLayer != null : "fx:id=\"wireLayer\" was not injected: check your FXML file 'FXML.fxml'.";
     }
 
     /**
-     * Recomputes equivalent values in the circuit model and updates
-     * the current text field.
+     * Recomputes equivalent values in the circuit model and updates the current
+     * text field.
      */
     private void recomputeCircuit() {
         circuit.recalculateAll();
-
+        
         if (Circuit.getCurrent() != null) {
             currentField.setText(String.format("%.3f A", Circuit.getCurrent()));
         } else {
@@ -346,11 +362,11 @@ public class MainViewController {
     }
 
     /**
-     * Reads values from the side-panel text fields and applies them
-     * to the given placed component's model (battery, resistor, or capacitor).
+     * Reads values from the side-panel text fields and applies them to the
+     * given placed component's model (battery, resistor, or capacitor).
      *
-     * This is used before the simulation has started when the user clicks a component
-     * to confirm the entered values.
+     * This is used before the simulation has started when the user clicks a
+     * component to confirm the entered values.
      *
      * @param pc placed component to update
      */
@@ -358,33 +374,33 @@ public class MainViewController {
         if (pc == null || pc.model == null) {
             return;
         }
-
+        
         String specialText = specialField.getText().trim();
         String voltageText = voltageField.getText().trim();
-
+        
         try {
             if (pc.model instanceof Battery b) {
                 if (!voltageText.isEmpty()) {
-                    double emf = Double.parseDouble(voltageText);
+                    double emf = Math.abs(Double.parseDouble(voltageText));
                     b.setEmf(emf);
                 }
                 System.out.println("Battery updated: emf = " + b.getEmf());
             } else if (pc.model instanceof Resistor r) {
                 if (!specialText.isEmpty()) {
-                    double R = Double.parseDouble(specialText);
+                    double R = Math.abs(Double.parseDouble(specialText));
                     r.setResistance(R);
                 }
                 System.out.println("Resistor updated: R = " + r.getResistance());
             } else if (pc.model instanceof Capacitor c) {
                 if (!specialText.isEmpty() & !voltageText.isEmpty()) {
-                    double C = Double.parseDouble(specialText);
-                    double V = Double.parseDouble(voltageText);
+                    double C = Math.abs(Double.parseDouble(specialText));
+                    double V = Math.abs(Double.parseDouble(voltageText));
                     c.setCapacitance(C);
                     c.setVoltage(V);
                     System.out.println("Capacitor updated: C = " + c.getCapacitance());
                     System.out.println("Capacitor updated: V = " + c.getVoltage());
                 } else if (!specialText.isEmpty()) {
-                    double C = Double.parseDouble(specialText);
+                    double C = Math.abs(Double.parseDouble(specialText));
                     c.setCapacitance(C);
                     System.out.println("Capacitor updated: C = " + c.getCapacitance());
                 }
@@ -392,7 +408,7 @@ public class MainViewController {
 
             // After changing component values, recompute the circuit
             recomputeCircuit();
-
+            
         } catch (NumberFormatException ex) {
             System.out.println("Invalid number in text fields");
         }
@@ -401,8 +417,8 @@ public class MainViewController {
     /**
      * Enables selection behaviour for a placed component ImageView.
      *
-     * Before simulation: clicking applies field values to that component.
-     * After simulation: clicking shows that component's info on the side panel.
+     * Before simulation: clicking applies field values to that component. After
+     * simulation: clicking shows that component's info on the side panel.
      *
      * @param iv ImageView representing a placed component
      */
@@ -411,26 +427,26 @@ public class MainViewController {
             if (e.getButton() != MouseButton.PRIMARY) {
                 return;
             }
-
+            
             for (PlacedComponent pc : placedComponents) {
                 if (pc.node == iv) {
-
+                    
                     if (!simulationStarted) {
                         // Design time: apply entered values to model
                         applyFieldsToComponent(pc);
                         System.out.println("Applied fields to " + pc.type);
-
+                        
                         voltageField.clear();
                         specialField.clear();
                         currentField.clear();
-
+                        
                     } else {
                         // Simulation time: show live info for selected component
                         selectedComponent = pc;
                         showComponentInfo(pc);
                         System.out.println("Showing info for " + pc.type);
                     }
-
+                    
                     break;
                 }
             }
@@ -438,13 +454,11 @@ public class MainViewController {
     }
 
     /**
-     * Displays the details of the given placed component in the side-panel fields.
+     * Displays the details of the given placed component in the side-panel
+     * fields.
      *
-     * Shows:
-     * - Battery: emf
-     * - Resistor: resistance and voltage across it
-     * - Capacitor: capacitance, voltage, and charge Q
-     * - Circuit current I
+     * Shows: - Battery: emf - Resistor: resistance and voltage across it -
+     * Capacitor: capacitance, voltage, and charge Q - Circuit current I
      *
      * @param pc component whose info should be shown
      */
@@ -453,11 +467,11 @@ public class MainViewController {
         specialField.clear();
         specialField1.clear();
         currentField.clear();
-
+        
         if (pc == null || pc.model == null) {
             return;
         }
-
+        
         if (pc.model instanceof Battery b) {
             if (b.getEmf() != null) {
                 voltageField.setText(b.getEmf().toString() + " V");
@@ -480,14 +494,15 @@ public class MainViewController {
                 specialField1.setText(c.getCharge().toString() + " C");
             }
         }
-
+        
         if (Circuit.getCurrent() != null) {
             currentField.setText(String.format("%.4f A", Circuit.getCurrent()));
         }
     }
 
     /**
-     * Factory method that creates a model object for the given palette type string.
+     * Factory method that creates a model object for the given palette type
+     * string.
      *
      * @param type "BATTERY", "RESISTOR", or "CAPACITOR"
      * @return new model instance, or {@code null} if type is unknown
@@ -497,7 +512,7 @@ public class MainViewController {
             System.out.println("createModelForType: type is null");
             return null;
         }
-
+        
         return switch (type) {
             case "BATTERY" ->
                 new Battery(5.0);
@@ -513,10 +528,8 @@ public class MainViewController {
     /**
      * Enables right-click deletion for a placed component.
      *
-     * Removes:
-     * - The component ImageView
-     * - All wires connected to it
-     * - The underlying model from the Circuit
+     * Removes: - The component ImageView - All wires connected to it - The
+     * underlying model from the Circuit
      *
      * @param iv ImageView representing the component
      */
@@ -525,7 +538,7 @@ public class MainViewController {
             if (e.getButton() != MouseButton.SECONDARY) {
                 return;
             }
-
+            
             e.consume();
 
             // Remove any wires connected to this component
@@ -533,7 +546,7 @@ public class MainViewController {
             for (Wire w : wires) {
                 if ((w.from != null && w.from.node == iv)
                         || (w.to != null && w.to.node == iv)) {
-
+                    
                     componentLayer.getChildren().remove(w.line);
                     toRemove.add(w);
                 }
@@ -546,7 +559,7 @@ public class MainViewController {
             // Remove model from the circuit
             Object model = iv.getUserData();
             placedComponents.removeIf(pc -> pc.node == iv);
-
+            
             if (model instanceof Battery b) {
                 circuit.getBatterys().remove(b);
             } else if (model instanceof Resistor r) {
@@ -554,7 +567,7 @@ public class MainViewController {
             } else if (model instanceof Capacitor c) {
                 circuit.getCapacitors().remove(c);
             }
-
+            
             System.out.println("Component removed");
         });
     }
@@ -578,14 +591,14 @@ public class MainViewController {
      * Adds a newly created model object to the correct list in the circuit
      * based on the type string.
      *
-     * @param type  component type ("BATTERY", "RESISTOR", "CAPACITOR")
+     * @param type component type ("BATTERY", "RESISTOR", "CAPACITOR")
      * @param model model instance to add
      */
     private void addModelToCircuit(String type, Object model) {
         if (model == null || type == null) {
             return;
         }
-
+        
         switch (type) {
             case "BATTERY" ->
                 circuit.getBatterys().add((Battery) model);
@@ -615,15 +628,15 @@ public class MainViewController {
     }
 
     /**
-     * Configures mouse handlers on the component layer to allow users
-     * to draw wires by clicking and dragging on empty space.
+     * Configures mouse handlers on the component layer to allow users to draw
+     * wires by clicking and dragging on empty space.
      *
      * Wires start on mouse press, update on drag, and finalize on release,
      * possibly connecting two components.
      */
     private void setupWireDrawing() {
         componentLayer.setOnMousePressed(event -> {
-
+            
             if (event.getButton() != MouseButton.PRIMARY) {
                 return;
             }
@@ -632,10 +645,10 @@ public class MainViewController {
             if (event.getTarget() instanceof ImageView) {
                 return;
             }
-
+            
             double paneW = componentLayer.getWidth();
             double paneH = componentLayer.getHeight();
-
+            
             double x = event.getX();
             double y = event.getY();
 
@@ -652,7 +665,7 @@ public class MainViewController {
             if (y > paneH) {
                 y = paneH;
             }
-
+            
             currentWire = new Line();
             currentWire.setStroke(Color.WHITE);
             currentWire.setStrokeWidth(5);
@@ -660,15 +673,15 @@ public class MainViewController {
             currentWire.setStartY(y);
             currentWire.setEndX(x);
             currentWire.setEndY(y);
-
+            
             componentLayer.getChildren().add(currentWire);
         });
-
+        
         componentLayer.setOnMouseDragged(event -> {
             if (currentWire != null && event.getButton() == MouseButton.PRIMARY) {
                 double paneW = componentLayer.getWidth();
                 double paneH = componentLayer.getHeight();
-
+                
                 double x = event.getX();
                 double y = event.getY();
 
@@ -685,17 +698,17 @@ public class MainViewController {
                 if (y > paneH) {
                     y = paneH;
                 }
-
+                
                 currentWire.setEndX(x);
                 currentWire.setEndY(y);
             }
         });
-
+        
         componentLayer.setOnMouseReleased(event -> {
             if (currentWire != null && event.getButton() == MouseButton.PRIMARY) {
                 double paneW = componentLayer.getWidth();
                 double paneH = componentLayer.getHeight();
-
+                
                 double x = event.getX();
                 double y = event.getY();
 
@@ -712,10 +725,10 @@ public class MainViewController {
                 if (y > paneH) {
                     y = paneH;
                 }
-
+                
                 currentWire.setEndX(x);
                 currentWire.setEndY(y);
-
+                
                 double dx = currentWire.getEndX() - currentWire.getStartX();
                 double dy = currentWire.getEndY() - currentWire.getStartY();
                 // Ignore very short lines (accidental clicks)
@@ -724,18 +737,18 @@ public class MainViewController {
                     currentWire = null;
                     return;
                 }
-
+                
                 Point2D start = new Point2D(currentWire.getStartX(), currentWire.getStartY());
                 Point2D end = new Point2D(currentWire.getEndX(), currentWire.getEndY());
-
+                
                 PlacedComponent c1 = findComponentAt(start);
                 PlacedComponent c2 = findComponentAt(end);
-
+                
                 if (c1 != null && c2 != null && c1 != c2) {
                     // Valid connection
                     currentWire.setStroke(Color.LIMEGREEN);
                     System.out.println("Wire connected: " + c1.type + " -> " + c2.type);
-
+                    
                     Wire w = new Wire(currentWire, c1, c2);
                     wires.add(w);
                 } else {
@@ -743,17 +756,18 @@ public class MainViewController {
                     currentWire.setStroke(Color.DARKRED);
                     System.out.println("Wire not connected");
                 }
-
+                
                 enableWireDelete(currentWire);
-
+                
                 currentWire = null;
-
+                
             }
         });
     }
 
     /**
-     * Sets up drag detection on each palette icon (battery, resistor, capacitor).
+     * Sets up drag detection on each palette icon (battery, resistor,
+     * capacitor).
      */
     private void setupDragSources() {
         setupDragSource(batteryIcon, "BATTERY");
@@ -764,20 +778,21 @@ public class MainViewController {
     /**
      * Configures a single palette ImageView as a drag source.
      *
-     * When dragging starts, the image and a type string are placed on the dragboard.
+     * When dragging starts, the image and a type string are placed on the
+     * dragboard.
      *
      * @param source palette ImageView
-     * @param type   associated model type ("BATTERY", "RESISTOR", "CAPACITOR")
+     * @param type associated model type ("BATTERY", "RESISTOR", "CAPACITOR")
      */
     private void setupDragSource(ImageView source, String type) {
         source.setOnDragDetected(event -> {
             Dragboard db = source.startDragAndDrop(TransferMode.COPY);
-
+            
             ClipboardContent content = new ClipboardContent();
             content.putImage(source.getImage());
             content.putString(type);
             db.setContent(content);
-
+            
             event.consume();
         });
     }
@@ -797,12 +812,12 @@ public class MainViewController {
             }
             event.consume();
         });
-
+        
         circuitStack.setOnDragDropped(event -> {
-
+            
             Dragboard db = event.getDragboard();
             boolean success = false;
-
+            
             if (db.hasImage()) {
                 ImageView iv = new ImageView(db.getImage());
                 iv.setPreserveRatio(true);
@@ -811,17 +826,17 @@ public class MainViewController {
                 Point2D p = componentLayer.sceneToLocal(event.getSceneX(), event.getSceneY());
                 double paneW = componentLayer.getWidth();
                 double paneH = componentLayer.getHeight();
-
+                
                 double w;
                 double h;
-
+                
                 componentLayer.getChildren().add(iv);
                 componentLayer.applyCss();
                 componentLayer.layout();
                 Bounds b = iv.getBoundsInParent();
                 w = b.getWidth();
                 h = b.getHeight();
-
+                
                 double x = p.getX() - w / 2;
                 double y = p.getY() - h / 2;
 
@@ -838,23 +853,23 @@ public class MainViewController {
                 if (y + h > paneH) {
                     y = paneH - h;
                 }
-
+                
                 iv.setLayoutX(x);
                 iv.setLayoutY(y);
-
+                
                 String type = db.getString();
                 Object model = createModelForType(type);
                 addModelToCircuit(type, model);
-
+                
                 iv.setUserData(model);
                 placedComponents.add(new PlacedComponent(type, iv, model));
-
+                
                 enableComponentDelete(iv);
                 enableComponentSelect(iv);
-
+                
                 success = true;
             }
-
+            
             event.setDropCompleted(success);
             event.consume();
         });
